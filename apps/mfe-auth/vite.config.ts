@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import federation from '@originjs/vite-plugin-federation'
+import { federation } from '@module-federation/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { resolve } from 'node:path'
 
@@ -32,18 +32,23 @@ export default defineConfig({
       shared: {
         react: {
           requiredVersion: '^19.0.0',
+          singleton: true,
         },
         'react-dom': {
           requiredVersion: '^19.0.0',
+          singleton: true,
         },
         '@tanstack/react-router': {
           requiredVersion: '^1.130.2',
+          singleton: true,
         },
         '@tanstack/react-query': {
           requiredVersion: '^5.66.5',
+          singleton: true,
         },
         tailwindcss: {
           requiredVersion: '^4.0.6',
+          singleton: true,
         },
       },
     }),
