@@ -2,6 +2,7 @@
 export { Button, buttonVariants } from "./components/button.js";
 export { Input } from "./components/input.js";
 export { Label } from "./components/label.js";
+export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar.js";
 export {
   Card,
   CardHeader,
@@ -11,6 +12,23 @@ export {
   CardFooter,
   CardAction,
 } from "./components/card.js";
+export {
+  DropdownMenu,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from "./components/dropdown-menu.js";
 export {
   Form,
   FormItem,

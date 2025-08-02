@@ -27,6 +27,9 @@ export default defineConfig({
       exposes: {
         './dashboard': './src/components/Header.tsx',
       },
+      remotes: {
+        auth: 'http://localhost:3001/assets/remoteEntry.js',
+      },
       shared: {
         react: {
           requiredVersion: '^19.0.0',
@@ -36,6 +39,12 @@ export default defineConfig({
         },
         '@tanstack/react-router': {
           requiredVersion: '^1.130.2',
+        },
+        '@tanstack/react-query': {
+          requiredVersion: '^5.66.5',
+        },
+        tailwindcss: {
+          requiredVersion: '^4.0.6',
         },
       },
     }),

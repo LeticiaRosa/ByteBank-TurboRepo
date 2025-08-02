@@ -1,28 +1,17 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { RouterProvider } from '@tanstack/react-router'
 import { Toaster } from '@bytebank/ui'
 
+import { SharedContextProvider } from './shared/SharedContext'
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
-
-// Import the generated route tree
-import { routeTree } from './routeTree.gen'
+import { router } from './router'
 
 import reportWebVitals from './reportWebVitals.ts'
 import '@bytebank/ui/globals.css'
-// Create a new router instance
 
+// Get context for SharedContextProvider
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
-const router = createRouter({
-  routeTree,
-  context: {
-    ...TanStackQueryProviderContext,
-  },
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-  defaultStructuralSharing: true,
-  defaultPreloadStaleTime: 0,
-})
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
@@ -37,10 +26,12 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+      <SharedContextProvider
+        queryClient={TanStackQueryProviderContext.queryClient}
+      >
         <RouterProvider router={router} />
         <Toaster />
-      </TanStackQueryProvider.Provider>
+      </SharedContextProvider>
     </StrictMode>,
   )
 }
