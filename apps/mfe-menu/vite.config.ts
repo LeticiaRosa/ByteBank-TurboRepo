@@ -30,7 +30,11 @@ export default defineConfig({
         './dashboard': './src/components/Header.tsx',
       },
       remotes: {
-        auth: 'mfe-auth@http://localhost:3001/remoteEntry.js',
+        auth: {
+          type: 'module',
+          name: 'auth',
+          entry: 'http://localhost:3001/remoteEntry.js',
+        },
       },
       shared: {
         react: {
@@ -60,6 +64,7 @@ export default defineConfig({
     port: 3002,
     origin: 'http://localhost:3002',
     cors: true,
+    strictPort: true,
   },
   preview: {
     port: 3002,

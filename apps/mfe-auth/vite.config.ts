@@ -29,7 +29,11 @@ export default defineConfig({
         './useAuth': './src/hooks/useAuth.ts',
       },
       remotes: {
-        dashboard: 'mfe-menu@http://localhost:3002/remoteEntry.js',
+        dashboard: {
+          type: 'module',
+          name: 'dashboard',
+          entry: 'http://localhost:3002/remoteEntry.js',
+        },
       },
       shared: {
         react: {
@@ -59,6 +63,7 @@ export default defineConfig({
     port: 3001,
     origin: 'http://localhost:3001',
     cors: true,
+    strictPort: true,
   },
   preview: {
     port: 3001,
