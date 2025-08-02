@@ -7,6 +7,7 @@ import { resolve } from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: 'http://localhost:3001',
   plugins: [
     tanstackRouter({
       target: 'react',
@@ -23,11 +24,12 @@ export default defineConfig({
     federation({
       name: 'mfe-auth',
       filename: 'remoteEntry.js',
+      manifest: true,
       exposes: {
         './useAuth': './src/hooks/useAuth.ts',
       },
       remotes: {
-        dashboard: 'http://localhost:3002/assets/remoteEntry.js',
+        dashboard: 'mfe-menu@http://localhost:3002/remoteEntry.js',
       },
       shared: {
         react: {
@@ -55,6 +57,8 @@ export default defineConfig({
   ],
   server: {
     port: 3001,
+    origin: 'http://localhost:3001',
+    cors: true,
   },
   preview: {
     port: 3001,

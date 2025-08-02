@@ -16,7 +16,6 @@
   "dependencies": {
     "@bytebank/ui": "workspace:*",
     "@module-federation/vite": "^1.7.1",
-    "@originjs/vite-plugin-federation": "^1.4.1",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-query-devtools": "^5.66.5",

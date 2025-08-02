@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: 'http://localhost:3002',
   plugins: [
     tanstackRouter({
       target: 'react',
@@ -23,12 +24,13 @@ export default defineConfig({
     federation({
       name: 'mfe-menu',
       filename: 'remoteEntry.js',
+      manifest: true,
       // Modules to expose
       exposes: {
         './dashboard': './src/components/Header.tsx',
       },
       remotes: {
-        auth: 'http://localhost:3001/assets/remoteEntry.js',
+        auth: 'mfe-auth@http://localhost:3001/remoteEntry.js',
       },
       shared: {
         react: {
@@ -56,6 +58,8 @@ export default defineConfig({
   ],
   server: {
     port: 3002,
+    origin: 'http://localhost:3002',
+    cors: true,
   },
   preview: {
     port: 3002,

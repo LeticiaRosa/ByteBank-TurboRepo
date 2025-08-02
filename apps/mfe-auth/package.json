@@ -18,7 +18,6 @@
     "@bytebank/ui": "workspace:*",
     "@hookform/resolvers": "~5.2.1",
     "@module-federation/vite": "^1.7.1",
-    "@originjs/vite-plugin-federation": "^1.4.1",
     "@supabase/supabase-js": "^2.53.0",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-query": "^5.84.1",
