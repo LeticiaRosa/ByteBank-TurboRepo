@@ -3,6 +3,7 @@ import viteReact from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { resolve } from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,6 +19,7 @@ export default defineConfig({
       enableRouteTreeFormatting: true,
     }),
     viteReact(),
+    tailwindcss(),
     federation({
       name: 'mfe-menu',
       filename: 'remoteEntry.js',
