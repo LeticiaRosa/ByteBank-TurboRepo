@@ -15,6 +15,7 @@ import {
 // Componente simples para o logo sem usar Link do router
 const Logo = () => (
   <div className="flex items-center gap-3">
+    <SidebarTrigger className="text-white hover:bg-white/10" />
     <div className="flex h-8 w-8 items-center justify-center rounded text-white">
       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -26,7 +27,7 @@ const Logo = () => (
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-teal-600">
+    <header className="sticky top-0 z-50 w-full bg-teal-600 border-b border-teal-700">
       <div className="flex h-16 w-full items-center justify-between px-6">
         {/* Logo Section */}
         <div className="flex items-center">

@@ -1,5 +1,6 @@
 import Header from './Header'
 import {
+  SidebarProvider,
   Sidebar,
   SidebarContent,
   SidebarHeader,
@@ -98,21 +99,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const currentPath = router.state.location.pathname
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <div className="flex flex-1">
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
         <Sidebar>
-          <SidebarHeader className="p-4">
+          <SidebarHeader className="p-4 border-b">
             <h2 className="text-lg font-semibold">Menu</h2>
           </SidebarHeader>
           <SidebarContent>
-            <SidebarMenu>
+            <SidebarMenu className="p-2">
               {menuItems.map((item) => {
                 const isActive = currentPath === item.path
                 return (
                   <SidebarMenuItem key={item.path}>
                     <SidebarMenuButton asChild isActive={isActive}>
-                      <Link to={item.path}>
+                      <Link
+                        to={item.path}
+                        className="flex items-center gap-3 px-3 py-2"
+                      >
                         {item.icon}
                         <span>{item.title}</span>
                       </Link>
@@ -123,10 +126,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>
-        <SidebarInset>
-          <main className="flex-1 p-6 bg-gray-50">{children}</main>
+        <SidebarInset className="flex-1">
+          <Header />
+          <main className="flex-1 p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+            {children}
+          </main>
         </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   )
 }

@@ -1,15 +1,15 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
-import Header from '../components/Header'
-import { SidebarProvider } from '@bytebank/ui'
+import DashboardLayout from '../components/DashboardLayout'
 
 export const Route = createRootRoute({
   component: () => (
-    <SidebarProvider>
-      <Header />
-      <Outlet />
+    <>
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
       <TanStackRouterDevtools />
-    </SidebarProvider>
+    </>
   ),
 })
