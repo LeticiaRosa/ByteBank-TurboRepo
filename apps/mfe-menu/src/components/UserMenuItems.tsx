@@ -1,11 +1,36 @@
-import { DropdownMenuItem, DropdownMenuSeparator } from '@bytebank/ui'
+import { DropdownMenuItem, DropdownMenuSeparator, useToast } from '@bytebank/ui'
 import { ThemeToggle } from './ThemeToggle'
+import { useAuth } from 'auth/useAuth'
 
-interface UserMenuItemsProps {
-  onSignOut: () => void
-}
+export const UserMenuItems = () => {
+  const { signOut } = useAuth()
+  const toast = useToast()
 
-export const UserMenuItems = ({ onSignOut }: UserMenuItemsProps) => {
+  const handleSignOut = async () => {
+    try {
+      const result = await signOut()
+      if (result.success) {
+        toast.success('Logout realizado com sucesso!', {
+          description: 'Você foi desconectado da sua conta.',
+          duration: 3000,
+        })
+        // onSignOut()
+        // Redireciona para a tela de login
+        window.location.href = 'http://localhost:3001'
+      } else {
+        toast.error('Erro ao fazer logout', {
+          description: result.error?.message || 'Ocorreu um erro inesperado.',
+          duration: 5000,
+        })
+      }
+    } catch (error: any) {
+      toast.error('Erro inesperado', {
+        description: error?.message || 'Não foi possível realizar o logout.',
+        duration: 5000,
+      })
+    }
+  }
+
   return (
     <>
       <DropdownMenuItem>
@@ -51,7 +76,7 @@ export const UserMenuItems = ({ onSignOut }: UserMenuItemsProps) => {
 
       <DropdownMenuSeparator />
       <DropdownMenuItem
-        onClick={onSignOut}
+        onClick={handleSignOut}
         className="cursor-pointer text-destructive focus:text-destructive"
       >
         <svg

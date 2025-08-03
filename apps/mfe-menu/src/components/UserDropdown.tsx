@@ -15,14 +15,9 @@ import type { User } from '../types/user'
 interface UserDropdownProps {
   user: User
   loading: boolean
-  onSignOut: () => void
 }
 
-export const UserDropdown = ({
-  user,
-  loading,
-  onSignOut,
-}: UserDropdownProps) => {
+export const UserDropdown = ({ user, loading }: UserDropdownProps) => {
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -75,7 +70,7 @@ export const UserDropdown = ({
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <UserMenuItems onSignOut={onSignOut} />
+        <UserMenuItems />
       </DropdownMenuContent>
     </DropdownMenu>
   )

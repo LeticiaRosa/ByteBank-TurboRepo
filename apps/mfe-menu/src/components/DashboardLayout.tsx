@@ -8,6 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
+  Toaster,
 } from '@bytebank/ui'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ThemeProvider } from '../hooks/useTheme'
@@ -154,6 +155,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </SidebarInset>
         </div>
       </SidebarProvider>
+      <Toaster />
     </ThemeProvider>
   )
 }

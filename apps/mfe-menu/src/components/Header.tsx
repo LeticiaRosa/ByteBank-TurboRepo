@@ -20,10 +20,6 @@ export default function Header() {
   }
   const loading = false
 
-  const signOut = () => {
-    console.log('Fazendo logout...')
-  }
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className=" flex h-16 w-full items-center justify-between px-4">
@@ -35,7 +31,7 @@ export default function Header() {
 
         {/* User Avatar with Dropdown */}
         <div className="flex items-center">
-          <UserDropdown user={user} loading={loading} onSignOut={signOut} />
+          <UserDropdown user={user} loading={loading} />
         </div>
       </div>
     </header>
