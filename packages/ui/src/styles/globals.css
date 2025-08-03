@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./colors.css";
 @import "tw-animate-css";
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
@@ -7,6 +6,75 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Cores personalizadas usando OKLCH */
+:root,
+.light,
+.light-theme {
+  /* Blue scale - Light mode */
+  --blue-1: oklch(99.3% 0.0067 222.8);
+  --blue-2: oklch(98% 0.0126 222.8);
+  --blue-3: oklch(96.1% 0.0302 222.8);
+  --blue-4: oklch(93.6% 0.0451 222.8);
+  --blue-5: oklch(90.3% 0.0589 222.8);
+  --blue-6: oklch(86.1% 0.073 222.8);
+  --blue-7: oklch(80.6% 0.0908 222.8);
+  --blue-8: oklch(72.9% 0.1087 222.8);
+  --blue-9: oklch(39% 0.0725 222.8);
+  --blue-10: oklch(45.1% 0.0725 222.8);
+  --blue-11: oklch(52.6% 0.1087 222.8);
+  --blue-12: oklch(35.1% 0.0725 222.8);
+  --blue-contrast: #fff;
+
+  /* Gray scale - Light mode */
+  --gray-1: oklch(99.1% 0.0015 277.7);
+  --gray-2: oklch(98.2% 0.003 277.7);
+  --gray-3: oklch(95.6% 0.0045 277.7);
+  --gray-4: oklch(93.1% 0.0061 277.7);
+  --gray-5: oklch(91% 0.0077 277.7);
+  --gray-6: oklch(88.8% 0.0093 277.7);
+  --gray-7: oklch(85.3% 0.0117 277.7);
+  --gray-8: oklch(79.4% 0.016 277.7);
+  --gray-9: oklch(64.6% 0.0165 277.7);
+  --gray-10: oklch(61% 0.0161 277.7);
+  --gray-11: oklch(50.3% 0.0139 277.7);
+  --gray-12: oklch(24.1% 0.0099 277.7);
+  --gray-contrast: #ffffff;
+}
+
+.dark,
+.dark-theme {
+  /* Blue scale - Dark mode */
+  --blue-1: oklch(17.8% 0.0184 222.8);
+  --blue-2: oklch(21.2% 0.0207 222.8);
+  --blue-3: oklch(27.1% 0.0461 222.8);
+  --blue-4: oklch(31.7% 0.0644 222.8);
+  --blue-5: oklch(36.5% 0.0725 222.8);
+  --blue-6: oklch(41.7% 0.0783 222.8);
+  --blue-7: oklch(48.1% 0.0873 222.8);
+  --blue-8: oklch(55.8% 0.1035 222.8);
+  --blue-9: oklch(72.1% 0.1087 222.8);
+  --blue-10: oklch(68.4% 0.1087 222.8);
+  --blue-11: oklch(78.8% 0.1087 222.8);
+  --blue-12: oklch(91.7% 0.0564 222.8);
+  --blue-contrast: #fff;
+
+  /* Gray scale - Dark mode */
+  --gray-1: oklch(17.8% 0.0042 277.7);
+  --gray-2: oklch(21.5% 0.004 277.7);
+  --gray-3: oklch(25.5% 0.0055 277.7);
+  --gray-4: oklch(28.4% 0.0075 277.7);
+  --gray-5: oklch(31.4% 0.0089 277.7);
+  --gray-6: oklch(35% 0.01 277.7);
+  --gray-7: oklch(40.2% 0.0121 277.7);
+  --gray-8: oklch(49.2% 0.0157 277.7);
+  --gray-9: oklch(54% 0.0167 277.7);
+  --gray-10: oklch(58.6% 0.0165 277.7);
+  --gray-11: oklch(77% 0.0138 277.7);
+  --gray-12: oklch(94.9% 0.0026 277.7);
+  --gray-contrast: #ffffff;
+}
+
+/* Sistema de design - Variáveis semânticas */
 :root {
   --background: var(--gray-1);
   --foreground: var(--gray-12);
@@ -22,8 +90,8 @@
   --muted-foreground: var(--gray-11);
   --accent: var(--blue-4);
   --accent-foreground: var(--blue-12);
-  --destructive: #dc2626;
-  --destructive-foreground: #fef2f2;
+  --destructive: oklch(62.8% 0.25768 29.2339);
+  --destructive-foreground: oklch(97.85% 0.007 106.47);
   --border: var(--gray-6);
   --input: var(--gray-6);
   --ring: var(--blue-7);
@@ -58,8 +126,8 @@
   --muted-foreground: var(--gray-11);
   --accent: var(--blue-4);
   --accent-foreground: var(--blue-11);
-  --destructive: #dc2626;
-  --destructive-foreground: #fef2f2;
+  --destructive: oklch(67.5% 0.15 20);
+  --destructive-foreground: oklch(97.85% 0.007 106.47);
   --border: var(--gray-6);
   --input: var(--gray-6);
   --ring: var(--blue-8);
@@ -78,7 +146,9 @@
   --sidebar-ring: var(--blue-8);
 }
 
+/* Mapeamento para Tailwind CSS */
 @theme inline {
+  /* Cores do sistema */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -98,15 +168,21 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Charts */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -115,6 +191,33 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Cores diretas das escalas */
+  --color-blue-1: var(--blue-1);
+  --color-blue-2: var(--blue-2);
+  --color-blue-3: var(--blue-3);
+  --color-blue-4: var(--blue-4);
+  --color-blue-5: var(--blue-5);
+  --color-blue-6: var(--blue-6);
+  --color-blue-7: var(--blue-7);
+  --color-blue-8: var(--blue-8);
+  --color-blue-9: var(--blue-9);
+  --color-blue-10: var(--blue-10);
+  --color-blue-11: var(--blue-11);
+  --color-blue-12: var(--blue-12);
+
+  --color-gray-1: var(--gray-1);
+  --color-gray-2: var(--gray-2);
+  --color-gray-3: var(--gray-3);
+  --color-gray-4: var(--gray-4);
+  --color-gray-5: var(--gray-5);
+  --color-gray-6: var(--gray-6);
+  --color-gray-7: var(--gray-7);
+  --color-gray-8: var(--gray-8);
+  --color-gray-9: var(--gray-9);
+  --color-gray-10: var(--gray-10);
+  --color-gray-11: var(--gray-11);
+  --color-gray-12: var(--gray-12);
 }
 
 @layer base {
