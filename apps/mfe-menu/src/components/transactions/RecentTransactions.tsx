@@ -1,0 +1,123 @@
+import { type Transaction, type BankAccount } from '../../hooks'
+import { TransactionItem } from './TransactionItem'
+
+interface RecentTransactionsProps {
+  transactions: Transaction[] | undefined
+  primaryAccount: BankAccount | null | undefined
+  isLoadingTransactions: boolean
+  onProcessTransaction: (
+    transactionId: string,
+    action: 'complete' | 'fail',
+    reason?: string,
+  ) => Promise<void>
+  onEditTransaction?: (transaction: Transaction) => void
+  onDeleteTransaction?: (transactionId: string) => Promise<void>
+  onReprocessPendingTransactions: () => Promise<void>
+  onRefreshBankAccounts: () => Promise<void> | void
+}
+
+export function RecentTransactions({
+  transactions,
+  primaryAccount,
+  isLoadingTransactions,
+  onProcessTransaction,
+  onEditTransaction,
+  onDeleteTransaction,
+  onReprocessPendingTransactions,
+  onRefreshBankAccounts,
+}: RecentTransactionsProps) {
+  const handleReprocessAllPending = async () => {
+    await onReprocessPendingTransactions()
+    // Atualizar saldo imediatamente após reprocessar todas as transações
+    const refreshResult = onRefreshBankAccounts()
+    if (refreshResult instanceof Promise) {
+      await refreshResult
+    }
+  }
+
+  const handleViewAllTransactions = () => {
+    // Aqui você pode implementar navegação para uma página completa de transações
+    console.log('Ver todas as transações')
+  }
+
+  if (isLoadingTransactions) {
+    return (
+      <div className="bg-card rounded-lg shadow-sm border p-6">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          Transações Recentes
+        </h2>
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-card rounded-lg shadow-sm border p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-foreground">
+          Transações Recentes
+        </h2>
+
+        {/* Botão para reprocessar transações pendentes */}
+        {transactions && transactions.some((t) => t.status === 'pending') && (
+          <button
+            onClick={handleReprocessAllPending}
+            className="text-sm bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-md transition-colors"
+            title="Reprocessar transações pendentes"
+          >
+            Reprocessar Pendentes
+          </button>
+        )}
+      </div>
+
+      {transactions && transactions.length > 0 ? (
+        <div className="space-y-3">
+          {transactions.slice(0, 5).map((transaction: Transaction) => (
+            <TransactionItem
+              key={transaction.id}
+              transaction={transaction}
+              primaryAccount={primaryAccount}
+              onProcessTransaction={onProcessTransaction}
+              onEditTransaction={onEditTransaction}
+              onDeleteTransaction={onDeleteTransaction}
+              onRefreshBankAccounts={onRefreshBankAccounts}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg
+              className="w-8 h-8 text-muted-foreground"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+          </div>
+          <p className="text-muted-foreground">Nenhuma transação encontrada</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Suas transações aparecerão aqui após serem realizadas
+          </p>
+        </div>
+      )}
+
+      {transactions && transactions.length > 5 && (
+        <button
+          className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm"
+          onClick={handleViewAllTransactions}
+        >
+          Ver todas as transações ({transactions.length})
+        </button>
+      )}
+    </div>
+  )
+}

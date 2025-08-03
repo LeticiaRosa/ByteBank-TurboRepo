@@ -149,7 +149,7 @@ export class TransactionService {
       amount: MoneyUtils.reaisToCents(data.amount), // Converter para centavos
       user_id: userId,
       currency: 'BRL',
-      status: 'pending' as const,
+      status: 'completed' as const, // Transações são criadas como completed automaticamente
     }
 
     const transaction = await httpClient.post<Transaction>(
@@ -164,6 +164,67 @@ export class TransactionService {
     return {
       ...transaction,
       amount: MoneyUtils.centsToReais(transaction.amount),
+    }
+  }
+
+  /**
+   * Edita uma transação existente
+   * @param transactionId ID da transação a ser editada
+   * @param data Dados atualizados da transação (amount deve ser em reais, será convertido para centavos)
+   */
+  public async updateTransaction(
+    transactionId: string,
+    data: Partial<CreateTransactionData>,
+  ): Promise<Transaction> {
+    const userId = authService.getCurrentUserId()
+    if (!userId) {
+      throw new Error('Usuário não autenticado')
+    }
+
+    // Preparar dados para atualização
+    const updateData: any = { ...data }
+
+    // Converter valor para centavos se fornecido
+    if (data.amount !== undefined) {
+      updateData.amount = MoneyUtils.reaisToCents(data.amount)
+    }
+
+    const transaction = await httpClient.put<Transaction>(
+      `/transactions?id=eq.${transactionId}`,
+      updateData,
+    )
+
+    // Converter valor de volta para reais na resposta
+    return {
+      ...transaction,
+      amount: MoneyUtils.centsToReais(transaction.amount),
+    }
+  }
+
+  /**
+   * Exclui uma transação
+   * @param transactionId ID da transação a ser excluída
+   */
+  public async deleteTransaction(transactionId: string): Promise<void> {
+    try {
+      const userId = authService.getCurrentUserId()
+      if (!userId) {
+        throw new Error('Usuário não autenticado')
+      }
+
+      // Verificar se a transação pertence ao usuário antes de excluir
+      const transaction = await this.getTransaction(transactionId)
+      if (!transaction) {
+        throw new Error('Transação não encontrada')
+      }
+
+      // Fazer a exclusão
+      await httpClient.delete(
+        `/transactions?id=eq.${transactionId}&user_id=eq.${userId}`,
+      )
+    } catch (error) {
+      console.error('Erro ao excluir transação:', error)
+      throw error
     }
   }
 
@@ -317,6 +378,9 @@ export const transactionsApi = {
   createTransaction: (data: CreateTransactionData) =>
     transactionService.createTransaction(data),
   getTransaction: (id: string) => transactionService.getTransaction(id),
+  updateTransaction: (id: string, data: Partial<CreateTransactionData>) =>
+    transactionService.updateTransaction(id, data),
+  deleteTransaction: (id: string) => transactionService.deleteTransaction(id),
 }
 
 export const bankAccountsApi = {

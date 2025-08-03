@@ -114,4 +114,158 @@ export function useCreateTransaction() {
   })
 }
 
+/**
+ * Hook para atualizar transações
+ */
+export function useUpdateTransaction() {
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation({
+    mutationFn: ({
+      transactionId,
+      data,
+    }: {
+      transactionId: string
+      data: Partial<CreateTransactionData>
+    }) => transactionService.updateTransaction(transactionId, data),
+
+    onSuccess: (updatedTransaction: Transaction) => {
+      toast.success('Transação atualizada', {
+        description: 'A transação foi atualizada com sucesso.',
+        duration: 3000,
+      })
+
+      // Atualizar cache específico da transação
+      queryClient.setQueryData(
+        QUERY_KEYS.transactions.detail(updatedTransaction.id),
+        updatedTransaction,
+      )
+
+      // Atualizar lista de transações no cache
+      queryClient.setQueryData(
+        QUERY_KEYS.transactions.list(),
+        (oldTransactions: Transaction[] | undefined) => {
+          if (!oldTransactions) return [updatedTransaction]
+          return oldTransactions.map((transaction) =>
+            transaction.id === updatedTransaction.id
+              ? updatedTransaction
+              : transaction,
+          )
+        },
+      )
+
+      // Refetch queries relacionadas para garantir dados atualizados
+      Promise.all([
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.transactions.all,
+          type: 'active',
+        }),
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.lists(),
+          type: 'active',
+        }),
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.primary(),
+          type: 'active',
+        }),
+      ])
+
+      // Invalida queries relacionadas para garantir sincronização futura
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bankAccounts.all })
+    },
+
+    onError: (error: Error) => {
+      console.error('Erro ao atualizar transação:', error)
+
+      // Toast de erro mais específico
+      if (error.message.includes('Token de autenticação')) {
+        toast.error('Sessão expirada', {
+          description: 'Faça login novamente para continuar.',
+          duration: 5000,
+        })
+      } else {
+        toast.error('Erro ao atualizar transação', {
+          description: error.message || 'Tente novamente em alguns instantes.',
+          duration: 5000,
+        })
+      }
+    },
+  })
+}
+
+/**
+ * Hook para excluir transações
+ */
+export function useDeleteTransaction() {
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation({
+    mutationFn: (transactionId: string) =>
+      transactionService.deleteTransaction(transactionId),
+
+    onSuccess: (_, transactionId) => {
+      toast.success('Transação excluída', {
+        description: 'A transação foi excluída com sucesso.',
+        duration: 3000,
+      })
+
+      // Remover transação específica do cache
+      queryClient.removeQueries({
+        queryKey: QUERY_KEYS.transactions.detail(transactionId),
+      })
+
+      // Atualizar lista de transações no cache removendo a transação
+      queryClient.setQueryData(
+        QUERY_KEYS.transactions.list(),
+        (oldTransactions: Transaction[] | undefined) => {
+          if (!oldTransactions) return []
+          return oldTransactions.filter(
+            (transaction) => transaction.id !== transactionId,
+          )
+        },
+      )
+
+      // Refetch queries relacionadas para garantir dados atualizados
+      Promise.all([
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.transactions.all,
+          type: 'active',
+        }),
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.lists(),
+          type: 'active',
+        }),
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.primary(),
+          type: 'active',
+        }),
+      ])
+
+      // Invalida queries relacionadas para garantir sincronização futura
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bankAccounts.all })
+    },
+
+    onError: (error: Error) => {
+      console.error('Erro ao excluir transação:', error)
+
+      // Toast de erro mais específico
+      if (error.message.includes('Token de autenticação')) {
+        toast.error('Sessão expirada', {
+          description: 'Faça login novamente para continuar.',
+          duration: 5000,
+        })
+      } else {
+        toast.error('Erro ao excluir transação', {
+          description: error.message || 'Tente novamente em alguns instantes.',
+          duration: 5000,
+        })
+      }
+    },
+  })
+}
+
 export type { Transaction, CreateTransactionData }

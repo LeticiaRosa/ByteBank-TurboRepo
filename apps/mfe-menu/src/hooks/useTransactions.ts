@@ -1,6 +1,8 @@
 import {
   useTransactionsList,
   useCreateTransaction,
+  useUpdateTransaction,
+  useDeleteTransaction,
   useTransaction as useTransactionDetail,
   type Transaction,
   type CreateTransactionData,
@@ -30,8 +32,21 @@ export interface UseTransactionsReturn {
   isCreating: boolean
   createTransactionError: Error | null
 
+  // Estados de edição
+  isUpdating: boolean
+  updateTransactionError: Error | null
+
+  // Estados de exclusão
+  isDeleting: boolean
+  deleteTransactionError: Error | null
+
   // Ações
   createTransaction: (data: CreateTransactionData) => Promise<Transaction>
+  updateTransaction: (
+    transactionId: string,
+    data: Partial<CreateTransactionData>,
+  ) => Promise<Transaction>
+  deleteTransaction: (transactionId: string) => Promise<void>
   refreshTransactions: () => void
   refreshBankAccounts: () => void
 
@@ -83,6 +98,20 @@ export function useTransactions(): UseTransactionsReturn {
     error: createTransactionError,
   } = useCreateTransaction()
 
+  // Hook de atualização de transação
+  const {
+    mutateAsync: updateTransactionMutation,
+    isPending: isUpdating,
+    error: updateTransactionError,
+  } = useUpdateTransaction()
+
+  // Hook de exclusão de transação
+  const {
+    mutateAsync: deleteTransactionMutation,
+    isPending: isDeleting,
+    error: deleteTransactionError,
+  } = useDeleteTransaction()
+
   // Função para processar uma transação específica
   const processTransaction = async (
     transactionId: string,
@@ -120,6 +149,19 @@ export function useTransactions(): UseTransactionsReturn {
       })
       throw error
     }
+  }
+
+  // Função para atualizar uma transação específica
+  const updateTransaction = async (
+    transactionId: string,
+    data: Partial<CreateTransactionData>,
+  ) => {
+    return await updateTransactionMutation({ transactionId, data })
+  }
+
+  // Função para excluir uma transação específica
+  const deleteTransaction = async (transactionId: string) => {
+    return await deleteTransactionMutation(transactionId)
   }
 
   // Função para reprocessar transações pendentes
@@ -185,8 +227,18 @@ export function useTransactions(): UseTransactionsReturn {
     isCreating,
     createTransactionError: createTransactionError as Error | null,
 
+    // Estados de edição
+    isUpdating,
+    updateTransactionError: updateTransactionError as Error | null,
+
+    // Estados de exclusão
+    isDeleting,
+    deleteTransactionError: deleteTransactionError as Error | null,
+
     // Ações
     createTransaction: createTransactionMutation,
+    updateTransaction,
+    deleteTransaction,
     refreshTransactions,
     refreshBankAccounts,
 
