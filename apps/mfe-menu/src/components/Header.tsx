@@ -9,65 +9,110 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
-  SidebarTrigger,
+  Switch,
 } from '@bytebank/ui'
+import { useTheme } from '../hooks/useTheme'
 
 // Componente simples para o logo sem usar Link do router
 const Logo = () => (
-  <div className="flex items-center gap-3">
-    <SidebarTrigger className="text-white hover:bg-white/10" />
-    <div className="flex h-8 w-8 items-center justify-center rounded text-white">
-      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-      </svg>
-    </div>
-    <span className="text-xl font-bold text-white">Bytebank</span>
-  </div>
+  <a
+    href="/"
+    className="flex items-center gap-2 text-lg font-bold text-primary hover:text-primary/80 transition-colors"
+  >
+    <svg
+      className="h-8 w-8 text-primary"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+    </svg>
+    <span className="hidden sm:inline-block">ByteBank</span>
+  </a>
 )
 
 export default function Header() {
+  const { theme, toggleTheme } = useTheme()
+
+  // Dados fake do usuário
+  const user = {
+    user_metadata: {
+      full_name: 'João Silva',
+      avatar_url:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    },
+    email: 'joao.silva@email.com',
+    email_confirmed_at: '2024-01-01T00:00:00.000Z',
+  }
+  const loading = false
+
+  const signOut = () => {
+    console.log('Fazendo logout...')
+  }
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((word) => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
+
+  const getUserStatus = () => {
+    if (user?.email_confirmed_at) {
+      return 'Verificado'
+    }
+    return 'Pendente'
+  }
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-primary border-b border-primary/80">
-      <div className="flex h-16 w-full items-center justify-between px-6">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Logo Section */}
         <div className="flex items-center">
           <Logo />
         </div>
 
-        {/* User Info and Avatar */}
-        <div className="flex items-center gap-4">
-          <span className="text-white font-medium">{'Usuário'}</span>
-          {false ? (
-            <div className="h-10 w-10 rounded-full bg-white/20 animate-pulse" />
+        {/* User Avatar with Dropdown */}
+        <div className="flex items-center">
+          {loading ? (
+            <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-10 w-10 rounded-full hover:bg-white/10"
+                  className="relative h-8 w-8 rounded-full p-0"
                 >
-                  <Avatar className="h-10 w-10 border-2 border-white/20">
+                  <Avatar className="h-8 w-8">
                     <AvatarImage
-                      src="https://via.placeholder.com/150"
-                      alt="User Avatar"
+                      src={user.user_metadata?.avatar_url}
+                      alt={user.user_metadata?.full_name || user.email || ''}
                     />
-                    <AvatarFallback className="bg-white/20 text-white font-medium">
-                      {false && 'U'}
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {user.user_metadata?.full_name
+                        ? getInitials(user.user_metadata.full_name)
+                        : user.email?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuContent
+                className="bg-black"
+                // className="w-56 z-[60]"
+                // align="end"
+                // sideOffset={5}
+              >
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {'Usuário'}
+                      {user.user_metadata?.full_name || 'Usuário'}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      teste@teste.com
+                      {user.email}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      Status: ativo
+                      Status: {getUserStatus()}
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -110,10 +155,32 @@ export default function Header() {
                   </svg>
                   Configurações
                 </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center justify-between cursor-pointer">
+                  <div className="flex items-center">
+                    <svg
+                      className="mr-2 h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                      />
+                    </svg>
+                    Tema escuro
+                  </div>
+                  <Switch
+                    checked={theme === 'dark'}
+                    onCheckedChange={toggleTheme}
+                  />
+                </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => console.log('Sign out')}
+                  onClick={() => signOut()}
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <svg

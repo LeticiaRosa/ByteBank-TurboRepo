@@ -39,6 +39,7 @@ export {
   FormField,
   useFormField,
 } from "./components/form.js";
+export { Switch } from "./components/switch.js";
 export { Toaster } from "./components/sonner.js";
 export {
   Sidebar,
