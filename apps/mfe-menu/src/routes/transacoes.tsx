@@ -1,41 +1,31 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/transferencias')({
+export const Route = createFileRoute('/transacoes')({
   component: TransferenciasPage,
 })
 
 function TransferenciasPage() {
   return (
-    <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold text-foreground mb-6">Transferências</h1>
+    <div className="w-full">
+      <h1 className="text-3xl font-bold text-foreground mb-6">Transações</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Formulário de Transferência */}
+        {/* Formulário de Transações */}
         <div className="bg-card rounded-lg shadow-sm border p-6">
           <h2 className="text-xl font-semibold text-foreground mb-4">
-            Nova Transferência
+            Nova Transação
           </h2>
 
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-card-foreground mb-1">
-                Conta de Origem
+                Tipo de Transação
               </label>
               <select className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
-                <option>Conta Corrente - R$ 2.580,45</option>
-                <option>Conta Poupança - R$ 5.200,00</option>
+                <option>Transferência</option>
+                <option>Depósito</option>
+                <option>Pagamento de Boleto</option>
               </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-card-foreground mb-1">
-                Conta de Destino
-              </label>
-              <input
-                type="text"
-                placeholder="Digite a conta ou CPF/CNPJ"
-                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
-              />
             </div>
 
             <div>
@@ -45,6 +35,17 @@ function TransferenciasPage() {
               <input
                 type="text"
                 placeholder="R$ 0,00"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-card-foreground mb-1">
+                Conta de Destino
+              </label>
+              <input
+                type="text"
+                placeholder="Digite a conta ou CPF/CNPJ"
                 className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -64,7 +65,7 @@ function TransferenciasPage() {
               type="submit"
               className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors font-medium"
             >
-              Transferir
+              Efetuar Transação
             </button>
           </form>
         </div>
@@ -72,7 +73,7 @@ function TransferenciasPage() {
         {/* Histórico Recente */}
         <div className="bg-card rounded-lg shadow-sm border p-6">
           <h2 className="text-xl font-semibold text-foreground mb-4">
-            Transferências Recentes
+            Transações Recentes
           </h2>
 
           <div className="space-y-3">
@@ -153,7 +154,7 @@ function TransferenciasPage() {
           </div>
 
           <button className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm">
-            Ver todas as transferências
+            Ver todas as transações
           </button>
         </div>
       </div>

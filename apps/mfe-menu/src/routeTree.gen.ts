@@ -9,14 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TransferenciasRouteImport } from './routes/transferencias'
+import { Route as TransacoesRouteImport } from './routes/transacoes'
 import { Route as OutrosServicosRouteImport } from './routes/outros-servicos'
 import { Route as InvestimentosRouteImport } from './routes/investimentos'
 import { Route as IndexRouteImport } from './routes/index'
 
-const TransferenciasRoute = TransferenciasRouteImport.update({
-  id: '/transferencias',
-  path: '/transferencias',
+const TransacoesRoute = TransacoesRouteImport.update({
+  id: '/transacoes',
+  path: '/transacoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OutrosServicosRoute = OutrosServicosRouteImport.update({
@@ -39,48 +39,43 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/investimentos': typeof InvestimentosRoute
   '/outros-servicos': typeof OutrosServicosRoute
-  '/transferencias': typeof TransferenciasRoute
+  '/transacoes': typeof TransacoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/investimentos': typeof InvestimentosRoute
   '/outros-servicos': typeof OutrosServicosRoute
-  '/transferencias': typeof TransferenciasRoute
+  '/transacoes': typeof TransacoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/investimentos': typeof InvestimentosRoute
   '/outros-servicos': typeof OutrosServicosRoute
-  '/transferencias': typeof TransferenciasRoute
+  '/transacoes': typeof TransacoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/investimentos' | '/outros-servicos' | '/transferencias'
+  fullPaths: '/' | '/investimentos' | '/outros-servicos' | '/transacoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/investimentos' | '/outros-servicos' | '/transferencias'
-  id:
-    | '__root__'
-    | '/'
-    | '/investimentos'
-    | '/outros-servicos'
-    | '/transferencias'
+  to: '/' | '/investimentos' | '/outros-servicos' | '/transacoes'
+  id: '__root__' | '/' | '/investimentos' | '/outros-servicos' | '/transacoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InvestimentosRoute: typeof InvestimentosRoute
   OutrosServicosRoute: typeof OutrosServicosRoute
-  TransferenciasRoute: typeof TransferenciasRoute
+  TransacoesRoute: typeof TransacoesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/transferencias': {
-      id: '/transferencias'
-      path: '/transferencias'
-      fullPath: '/transferencias'
-      preLoaderRoute: typeof TransferenciasRouteImport
+    '/transacoes': {
+      id: '/transacoes'
+      path: '/transacoes'
+      fullPath: '/transacoes'
+      preLoaderRoute: typeof TransacoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/outros-servicos': {
@@ -111,7 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InvestimentosRoute: InvestimentosRoute,
   OutrosServicosRoute: OutrosServicosRoute,
-  TransferenciasRoute: TransferenciasRoute,
+  TransacoesRoute: TransacoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

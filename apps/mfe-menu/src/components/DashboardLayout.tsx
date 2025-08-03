@@ -33,8 +33,8 @@ const menuItems = [
     ),
   },
   {
-    title: 'Transferências',
-    path: '/transferencias',
+    title: 'Transações',
+    path: '/transacoes',
     icon: (
       <svg
         className="h-5 w-5"

@@ -6,7 +6,7 @@ export const Route = createFileRoute('/investimentos')({
 
 function InvestimentosPage() {
   return (
-    <div className="max-w-6xl">
+    <div className="w-full">
       <h1 className="text-3xl font-bold text-foreground mb-6">Investimentos</h1>
 
       {/* Resumo dos Investimentos */}
@@ -32,7 +32,9 @@ function InvestimentosPage() {
             Aplicações Ativas
           </h3>
           <p className="text-3xl font-bold text-primary">8</p>
-          <p className="text-sm text-muted-foreground mt-1">Produtos diferentes</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Produtos diferentes
+          </p>
         </div>
       </div>
 
@@ -70,7 +72,9 @@ function InvestimentosPage() {
                   <h4 className="font-medium text-foreground">
                     Tesouro Selic 2026
                   </h4>
-                  <p className="text-sm text-muted-foreground">Liquidez diária</p>
+                  <p className="text-sm text-muted-foreground">
+                    Liquidez diária
+                  </p>
                 </div>
                 <span className="text-chart-1 font-medium">+1,8%</span>
               </div>

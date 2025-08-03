@@ -6,8 +6,10 @@ export const Route = createFileRoute('/outros-servicos')({
 
 function OutrosServicosPage() {
   return (
-    <div className="max-w-6xl">
-      <h1 className="text-3xl font-bold text-foreground mb-6">Outros Serviços</h1>
+    <div className="w-full">
+      <h1 className="text-3xl font-bold text-foreground mb-6">
+        Outros Serviços
+      </h1>
 
       {/* Grid de Serviços */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -31,7 +33,9 @@ function OutrosServicosPage() {
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Cartões</h3>
-              <p className="text-sm text-muted-foreground">Gerencie seus cartões</p>
+              <p className="text-sm text-muted-foreground">
+                Gerencie seus cartões
+              </p>
             </div>
           </div>
           <p className="text-muted-foreground text-sm mb-4">
@@ -93,7 +97,9 @@ function OutrosServicosPage() {
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Seguros</h3>
-              <p className="text-sm text-muted-foreground">Proteja o que importa</p>
+              <p className="text-sm text-muted-foreground">
+                Proteja o que importa
+              </p>
             </div>
           </div>
           <p className="text-muted-foreground text-sm mb-4">
@@ -243,7 +249,9 @@ function OutrosServicosPage() {
                 <p className="text-xs text-muted-foreground">
                   Taxa zero para novos investimentos
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">3 dias atrás</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  3 dias atrás
+                </p>
               </div>
             </div>
           </div>
@@ -272,7 +280,9 @@ function OutrosServicosPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-foreground">Notificações push</p>
-                <p className="text-sm text-muted-foreground">Alerts no celular</p>
+                <p className="text-sm text-muted-foreground">
+                  Alerts no celular
+                </p>
               </div>
               <button className="w-12 h-6 bg-muted rounded-full relative">
                 <div className="w-4 h-4 bg-card rounded-full absolute left-1 top-1"></div>
@@ -282,7 +292,9 @@ function OutrosServicosPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-foreground">Resumo mensal</p>
-                <p className="text-sm text-muted-foreground">Relatório por email</p>
+                <p className="text-sm text-muted-foreground">
+                  Relatório por email
+                </p>
               </div>
               <button className="w-12 h-6 bg-primary rounded-full relative">
                 <div className="w-4 h-4 bg-card rounded-full absolute right-1 top-1"></div>
