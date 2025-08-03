@@ -70,7 +70,12 @@ export default defineConfig({
   build: {
     target: 'esnext',
     minify: false,
-    cssCodeSplit: false,
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
   },
   resolve: {
     alias: {

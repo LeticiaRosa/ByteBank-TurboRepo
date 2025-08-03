@@ -11,7 +11,6 @@ import {
 } from '@bytebank/ui'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ThemeProvider } from '../hooks/useTheme'
-import { useEffect } from 'react'
 
 const menuItems = [
   {
