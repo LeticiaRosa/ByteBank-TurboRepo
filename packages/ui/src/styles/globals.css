@@ -100,6 +100,13 @@
   --chart-3: var(--blue-5);
   --chart-4: var(--gray-9);
   --chart-5: var(--gray-7);
+  --chart-red: oklch(58.703% 0.21604 25.812);
+  --chart-green: oklch(80.842% 0.19749 144.312);
+  --chart-6: oklch(0.6231 0.188 259.81);
+  --chart-7: oklch(0.6959 0.1491 162.48);
+  --chart-8: oklch(0.7686 0.1647 70.08);
+  --chart-9: oklch(0.6368 0.2078 25.33);
+  --chart-10: oklch(0.6056 0.2189 292.72);
   --radius: 0.625rem;
   --sidebar: var(--gray-2);
   --sidebar-foreground: var(--gray-12);
@@ -175,6 +182,13 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-red: var(--chart-red);
+  --color-chart-green: var(--chart-green);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+  --color-chart-9: var(--chart-9);
+  --color-chart-10: var(--chart-10);
 
   /* Radius */
   --radius-sm: calc(var(--radius) - 4px);

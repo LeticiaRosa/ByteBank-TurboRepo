@@ -67,6 +67,14 @@ export {
   SidebarTrigger,
   useSidebar,
 } from "./components/sidebar.js";
+export {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from "./components/chart.js";
 
 // Hooks
 export { useToast } from "./hooks/use-toast.js";
