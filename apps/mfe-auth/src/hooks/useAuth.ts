@@ -3,10 +3,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase, type User, type AuthError } from '../lib/supabase'
 import type { AuthResponse, Session } from '@supabase/supabase-js'
 
+// Chaves centralizadas para o React Query
 const AUTH_KEYS = {
   user: ['auth', 'user'] as const,
   session: ['auth', 'session'] as const,
-}
+} as const
 
 export interface AuthState {
   user: User | null
@@ -14,17 +15,35 @@ export interface AuthState {
   error: AuthError | null
 }
 
-// Auth API functions
-const authApi = {
-  signIn: async (email: string, password: string): Promise<AuthResponse> => {
-    return await supabase.auth.signInWithPassword({ email, password })
-  },
+export interface BankAccount {
+  id: string
+  user_id: string
+  account_number: string
+  account_type: 'checking' | 'savings' | 'business'
+  balance: number
+  currency: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
 
-  signUp: async (
+export interface CreateBankAccountData {
+  account_type?: 'checking' | 'savings' | 'business'
+  balance?: number
+  currency?: string
+}
+
+// Classe de serviço para operações de autenticação
+class AuthenticationService {
+  public async signIn(email: string, password: string): Promise<AuthResponse> {
+    return await supabase.auth.signInWithPassword({ email, password })
+  }
+
+  public async signUp(
     email: string,
     password: string,
     fullName?: string,
-  ): Promise<AuthResponse> => {
+  ): Promise<AuthResponse> {
     return await supabase.auth.signUp({
       email,
       password,
@@ -34,22 +53,60 @@ const authApi = {
         },
       },
     })
-  },
+  }
 
-  signOut: async () => {
+  public async signOut() {
     return await supabase.auth.signOut()
-  },
+  }
 
-  getSession: async (): Promise<Session | null> => {
+  public async getSession(): Promise<Session | null> {
     const { data } = await supabase.auth.getSession()
     return data.session
-  },
+  }
 
-  getUser: async (): Promise<User | null> => {
+  public async getUser(): Promise<User | null> {
     const { data } = await supabase.auth.getUser()
     return data.user as User | null
-  },
+  }
 }
+
+// Classe de serviço para operações de conta bancária
+class BankAccountService {
+  public async createBankAccount(
+    userId: string,
+    accountData: CreateBankAccountData,
+  ): Promise<BankAccount> {
+    // Gerar número de conta único baseado em timestamp e userId
+    const timestamp = Date.now().toString()
+    const userIdShort = userId.slice(-6) // Últimos 6 caracteres do user ID
+    const accountNumber = `${timestamp.slice(-6)}${userIdShort}`
+
+    const bankAccountData = {
+      user_id: userId,
+      account_number: accountNumber,
+      account_type: accountData.account_type || 'checking',
+      balance: accountData.balance || 0.0,
+      currency: accountData.currency || 'BRL',
+      is_active: true,
+    }
+
+    const { data, error } = await supabase
+      .from('bank_accounts')
+      .insert(bankAccountData)
+      .select()
+      .single()
+
+    if (error) {
+      throw new Error(`Erro ao criar conta bancária: ${error.message}`)
+    }
+
+    return data as BankAccount
+  }
+}
+
+// Instâncias dos serviços
+const authService = new AuthenticationService()
+const bankAccountService = new BankAccountService()
 
 export function useAuth() {
   const queryClient = useQueryClient()
@@ -61,7 +118,7 @@ export function useAuth() {
     error: userError,
   } = useQuery({
     queryKey: AUTH_KEYS.user,
-    queryFn: authApi.getUser,
+    queryFn: () => authService.getUser(),
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
   })
@@ -69,8 +126,8 @@ export function useAuth() {
   // Mutations para autenticação
   const signInMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
-      authApi.signIn(email, password),
-    onSuccess: (data) => {
+      authService.signIn(email, password),
+    onSuccess: (data: AuthResponse) => {
       if (data.data.user) {
         queryClient.setQueryData(AUTH_KEYS.user, data.data.user)
         queryClient.invalidateQueries({ queryKey: AUTH_KEYS.session })
@@ -90,8 +147,8 @@ export function useAuth() {
       email: string
       password: string
       fullName?: string
-    }) => authApi.signUp(email, password, fullName),
-    onSuccess: (data) => {
+    }) => authService.signUp(email, password, fullName),
+    onSuccess: (data: AuthResponse) => {
       if (data.data.user) {
         queryClient.setQueryData(AUTH_KEYS.user, data.data.user)
         queryClient.invalidateQueries({ queryKey: AUTH_KEYS.session })
@@ -103,13 +160,31 @@ export function useAuth() {
   })
 
   const signOutMutation = useMutation({
-    mutationFn: authApi.signOut,
+    mutationFn: () => authService.signOut(),
     onSuccess: () => {
       queryClient.setQueryData(AUTH_KEYS.user, null)
       queryClient.removeQueries({ queryKey: AUTH_KEYS.session })
     },
     onError: (error) => {
       console.error('Sign out error:', error)
+    },
+  })
+
+  const createBankAccountMutation = useMutation({
+    mutationFn: ({
+      userId,
+      accountData,
+    }: {
+      userId: string
+      accountData: CreateBankAccountData
+    }) => bankAccountService.createBankAccount(userId, accountData),
+    onSuccess: (bankAccount) => {
+      console.log('Conta bancária criada com sucesso:', bankAccount)
+      // Invalida queries relacionadas a contas bancárias se houver
+      queryClient.invalidateQueries({ queryKey: ['bank_accounts'] })
+    },
+    onError: (error) => {
+      console.error('Erro ao criar conta bancária:', error)
     },
   })
 
@@ -172,6 +247,31 @@ export function useAuth() {
         }
       }
 
+      // Se o usuário foi criado com sucesso, criar uma conta bancária padrão
+      if (result.data.user) {
+        try {
+          await createBankAccountMutation.mutateAsync({
+            userId: result.data.user.id,
+            accountData: {
+              account_type: 'checking', // Conta corrente como padrão
+              balance: 0.0,
+              currency: 'BRL',
+            },
+          })
+          console.log(
+            'Conta bancária criada automaticamente para o novo usuário',
+          )
+        } catch (bankAccountError: any) {
+          // Se falhar ao criar a conta bancária, ainda retorna sucesso no signup
+          // mas loga o erro para investigação
+          console.error(
+            'Erro ao criar conta bancária automática:',
+            bankAccountError,
+          )
+          // Não falha o signup por causa disso, mas pode ser tratado posteriormente
+        }
+      }
+
       return { success: true, user: result.data.user }
     } catch (error: any) {
       return {
@@ -197,16 +297,44 @@ export function useAuth() {
     }
   }
 
+  const createBankAccount = async (accountData: CreateBankAccountData) => {
+    if (!user) {
+      return {
+        success: false,
+        error: {
+          message: 'Usuário não autenticado',
+        },
+      }
+    }
+
+    try {
+      const bankAccount = await createBankAccountMutation.mutateAsync({
+        userId: user.id,
+        accountData,
+      })
+      return { success: true, bankAccount }
+    } catch (error: any) {
+      return {
+        success: false,
+        error: {
+          message: error?.message || 'Erro inesperado ao criar conta bancária',
+        },
+      }
+    }
+  }
+
   return {
     user,
     loading:
       userLoading ||
       signInMutation.isPending ||
       signUpMutation.isPending ||
-      signOutMutation.isPending,
+      signOutMutation.isPending ||
+      createBankAccountMutation.isPending,
     error: userError ? { message: userError.message } : null,
     signIn,
     signUp,
     signOut,
+    createBankAccount,
   }
 }
