@@ -133,7 +133,7 @@ function HomePage() {
           <h2 className="text-xl font-semibold text-card-foreground mb-4">
             Evolução Financeira (Últimos 5 Meses)
           </h2>
-          <ChartContainer config={chartConfig} className="h-[300px]">
+          <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <LineChart data={monthlyBalanceData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
@@ -170,7 +170,7 @@ function HomePage() {
           <h2 className="text-xl font-semibold text-card-foreground mb-4">
             Distribuição de Gastos por Categoria
           </h2>
-          <ChartContainer config={expensesConfig} className="h-[300px]">
+          <ChartContainer config={expensesConfig} className="h-[300px] w-full">
             <PieChart>
               <Pie
                 data={expensesData}
