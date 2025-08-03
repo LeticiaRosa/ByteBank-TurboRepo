@@ -21,10 +21,22 @@ function TransferenciasPage() {
               <label className="block text-sm font-medium text-card-foreground mb-1">
                 Tipo de Transação
               </label>
-              <select className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
-                <option>Transferência</option>
-                <option>Depósito</option>
-                <option>Pagamento de Boleto</option>
+              <select className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-card-foreground bg-card">
+                <option
+                  value="transferencia"
+                  className="text-card-foreground bg-card"
+                >
+                  Transferência
+                </option>
+                <option
+                  value="deposito"
+                  className="text-card-foreground bg-card"
+                >
+                  Depósito
+                </option>
+                <option value="boleto" className="text-card-foreground bg-card">
+                  Pagamento de Boleto
+                </option>
               </select>
             </div>
 

@@ -1,23 +1,20 @@
 import { Logo } from './Logo'
 import { UserDropdown } from './UserDropdown'
 import { SidebarTrigger } from '@bytebank/ui'
-import type { User } from '../types/user'
 import { useAuth } from 'auth/useAuth'
 
 export default function Header() {
-  const { user: usuario } = useAuth()
-
-  console.log('User data:', usuario)
+  const { user } = useAuth()
   // Dados fake do usuário
-  const user: User = {
-    user_metadata: {
-      full_name: 'João Silva',
-      avatar_url:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    },
-    email: 'joao.silva@email.com',
-    email_confirmed_at: '2024-01-01T00:00:00.000Z',
-  }
+  // const user: User = {
+  //   user_metadata: {
+  //     full_name: 'João Silva',
+  //     avatar_url:
+  //       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+  //   },
+  //   email: 'joao.silva@email.com',
+  //   email_confirmed_at: '2024-01-01T00:00:00.000Z',
+  // }
   const loading = false
 
   return (
