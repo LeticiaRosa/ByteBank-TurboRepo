@@ -9,73 +9,49 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
+  SidebarTrigger,
 } from '@bytebank/ui'
-import { useAuth } from 'auth/useAuth'
 
 // Componente simples para o logo sem usar Link do router
 const Logo = () => (
-  <a
-    href="/"
-    className="flex items-center gap-2 text-lg font-bold text-primary hover:text-primary/80 transition-colors"
-  >
-    <svg
-      className="h-8 w-8 text-primary"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-    </svg>
-    <span className="hidden sm:inline-block">ByteBank</span>
-  </a>
+  <div className="flex items-center gap-3">
+    <div className="flex h-8 w-8 items-center justify-center rounded text-white">
+      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+    </div>
+    <span className="text-xl font-bold text-white">Bytebank</span>
+  </div>
 )
 
 export default function Header() {
-  const { user, signOut, loading } = useAuth()
-
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((word) => word.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
-
-  const getUserStatus = () => {
-    if (user?.email_confirmed_at) {
-      return 'Verificado'
-    }
-    return 'Pendente'
-  }
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full bg-teal-600">
+      <div className="flex h-16 w-full items-center justify-between px-6">
         {/* Logo Section */}
         <div className="flex items-center">
           <Logo />
         </div>
 
-        {/* User Avatar with Dropdown */}
-        <div className="flex items-center">
-          {loading ? (
-            <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
-          ) : user ? (
+        {/* User Info and Avatar */}
+        <div className="flex items-center gap-4">
+          <span className="text-white font-medium">{'Usuário'}</span>
+          {false ? (
+            <div className="h-10 w-10 rounded-full bg-white/20 animate-pulse" />
+          ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
+                  className="relative h-10 w-10 rounded-full hover:bg-white/10"
                 >
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-10 w-10 border-2 border-white/20">
                     <AvatarImage
-                      src={user.user_metadata?.avatar_url}
-                      alt={user.user_metadata?.full_name || user.email || ''}
+                      src="https://via.placeholder.com/150"
+                      alt="User Avatar"
                     />
-                    <AvatarFallback>
-                      {user.user_metadata?.full_name
-                        ? getInitials(user.user_metadata.full_name)
-                        : user.email?.charAt(0).toUpperCase() || 'U'}
+                    <AvatarFallback className="bg-white/20 text-white font-medium">
+                      {false && 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -84,13 +60,13 @@ export default function Header() {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {user.user_metadata?.full_name || 'Usuário'}
+                      {'Usuário'}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
+                      teste@teste.com
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      Status: {getUserStatus()}
+                      Status: ativo
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -136,7 +112,7 @@ export default function Header() {
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => signOut()}
+                  onClick={() => console.log('Sign out')}
                   className="cursor-pointer text-red-600 focus:text-red-600"
                 >
                   <svg
@@ -156,13 +132,6 @@ export default function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">
-                Entrar
-              </Button>
-              <Button size="sm">Criar Conta</Button>
-            </div>
           )}
         </div>
       </div>

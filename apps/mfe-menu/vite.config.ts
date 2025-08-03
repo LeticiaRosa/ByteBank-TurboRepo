@@ -25,7 +25,7 @@ export default defineConfig({
       name: 'mfe-menu',
       filename: 'remoteEntry.js',
       manifest: true,
-      // Modules to expose
+      //     // Modules to expose
       exposes: {
         './dashboard': './src/components/Header.tsx',
       },
@@ -53,17 +53,11 @@ export default defineConfig({
           requiredVersion: '^5.66.5',
           singleton: true,
         },
-        tailwindcss: {
-          requiredVersion: '^4.0.6',
-          singleton: true,
-        },
       },
     }),
   ],
   server: {
     port: 3002,
-    origin: 'http://localhost:3002',
-    cors: true,
     strictPort: true,
   },
   preview: {

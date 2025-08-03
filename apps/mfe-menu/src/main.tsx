@@ -33,8 +33,13 @@ declare module '@tanstack/react-router' {
 
 // Render the app
 const rootElement = document.getElementById('app')
-if (rootElement && !rootElement.innerHTML) {
+
+if (rootElement) {
+  // Clear any existing content to avoid hydration mismatch
+  rootElement.innerHTML = ''
+
   const root = ReactDOM.createRoot(rootElement)
+
   root.render(
     <StrictMode>
       <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
