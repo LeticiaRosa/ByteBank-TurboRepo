@@ -10,6 +10,7 @@ import { routeTree } from './routeTree.gen'
 
 import reportWebVitals from './reportWebVitals.ts'
 import '@bytebank/ui/globals.css'
+import { ThemeProvider } from './providers/theme.tsx'
 // Create a new router instance
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
@@ -42,10 +43,12 @@ if (rootElement) {
 
   root.render(
     <StrictMode>
-      <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </TanStackQueryProvider.Provider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+          <RouterProvider router={router} />
+          <Toaster />
+        </TanStackQueryProvider.Provider>
+      </ThemeProvider>
     </StrictMode>,
   )
 }
