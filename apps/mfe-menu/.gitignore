@@ -7,3 +7,5 @@ count.txt
 .env
 .nitro
 .tanstack
+.__mf__temp
+**/*-__mf
