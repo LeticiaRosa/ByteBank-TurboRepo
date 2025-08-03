@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { Toaster } from '@bytebank/ui'
 
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
+import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -33,14 +34,21 @@ declare module '@tanstack/react-router' {
 
 // Render the app
 const rootElement = document.getElementById('app')
-if (rootElement && !rootElement.innerHTML) {
+
+if (rootElement) {
+  // Clear any existing content to avoid hydration mismatch
+  rootElement.innerHTML = ''
+
   const root = ReactDOM.createRoot(rootElement)
+
   root.render(
     <StrictMode>
-      <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </TanStackQueryProvider.Provider>
+      <ErrorBoundary>
+        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+          <RouterProvider router={router} />
+          <Toaster />
+        </TanStackQueryProvider.Provider>
+      </ErrorBoundary>
     </StrictMode>,
   )
 }
