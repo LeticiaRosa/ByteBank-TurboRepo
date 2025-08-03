@@ -10,6 +10,11 @@ export function useBankAccounts() {
     queryKey: QUERY_KEYS.bankAccounts.lists(),
     queryFn: () => bankAccountService.getBankAccounts(),
     ...QUERY_CONFIG.bankAccounts,
+    // Atualização automática mais frequente para saldos sempre atuais
+    refetchInterval: 5000, // 5 segundos
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   })
 }
 
@@ -24,6 +29,11 @@ export function usePrimaryBankAccount() {
     queryFn: () => bankAccountService.getPrimaryAccount(),
     enabled: !!bankAccounts && bankAccounts.length > 0,
     ...QUERY_CONFIG.bankAccounts,
+    // Atualização automática mais frequente para saldo sempre atual
+    refetchInterval: 5000, // 5 segundos
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   })
 }
 

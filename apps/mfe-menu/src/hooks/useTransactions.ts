@@ -10,6 +10,8 @@ import {
   usePrimaryBankAccount,
   type BankAccount,
 } from './useBankAccounts'
+import { transactionService } from '../lib/transactions'
+import { useToast } from '@bytebank/ui'
 
 // Interface do hook principal - combinando responsabilidades relacionadas
 export interface UseTransactionsReturn {
@@ -33,6 +35,14 @@ export interface UseTransactionsReturn {
   refreshTransactions: () => void
   refreshBankAccounts: () => void
 
+  // Funções de processamento de transações
+  processTransaction: (
+    transactionId: string,
+    action?: 'complete' | 'fail',
+    reason?: string,
+  ) => Promise<void>
+  reprocessPendingTransactions: () => Promise<void>
+
   // Função helper para transação específica
   getTransaction: (id: string) => {
     transaction: Transaction | undefined
@@ -46,6 +56,8 @@ export interface UseTransactionsReturn {
  * Mantém compatibilidade com a API anterior enquanto usa os hooks especializados
  */
 export function useTransactions(): UseTransactionsReturn {
+  const toast = useToast()
+
   // Hooks especializados para transações
   const {
     data: transactions,
@@ -70,6 +82,69 @@ export function useTransactions(): UseTransactionsReturn {
     isPending: isCreating,
     error: createTransactionError,
   } = useCreateTransaction()
+
+  // Função para processar uma transação específica
+  const processTransaction = async (
+    transactionId: string,
+    action: 'complete' | 'fail' = 'complete',
+    reason?: string,
+  ) => {
+    try {
+      const result = await transactionService.processTransaction(
+        transactionId,
+        action,
+        reason,
+      )
+
+      if (result.success) {
+        toast.success('Transação processada', {
+          description: result.message,
+          duration: 3000,
+        })
+
+        // Atualizar a lista de transações para refletir as mudanças
+        await refreshTransactions()
+        await refreshBankAccounts() // Para atualizar saldos
+      } else {
+        toast.error('Falha no processamento', {
+          description: result.message,
+          duration: 5000,
+        })
+      }
+    } catch (error) {
+      console.error('Erro ao processar transação:', error)
+      toast.error('Erro no processamento', {
+        description:
+          error instanceof Error ? error.message : 'Erro desconhecido',
+        duration: 5000,
+      })
+      throw error
+    }
+  }
+
+  // Função para reprocessar transações pendentes
+  const reprocessPendingTransactions = async () => {
+    try {
+      await transactionService.reprocessPendingTransactions()
+
+      toast.success('Reprocessamento concluído', {
+        description: 'Transações pendentes foram reprocessadas',
+        duration: 3000,
+      })
+
+      // Atualizar dados após reprocessamento
+      await refreshTransactions()
+      await refreshBankAccounts()
+    } catch (error) {
+      console.error('Erro ao reprocessar transações:', error)
+      toast.error('Erro no reprocessamento', {
+        description:
+          error instanceof Error ? error.message : 'Erro desconhecido',
+        duration: 5000,
+      })
+      throw error
+    }
+  }
 
   // Função helper para obter transação específica usando cache inteligente
   const getTransaction = (id: string) => {
@@ -114,6 +189,12 @@ export function useTransactions(): UseTransactionsReturn {
     createTransaction: createTransactionMutation,
     refreshTransactions,
     refreshBankAccounts,
+
+    // Funções de processamento
+    processTransaction,
+    reprocessPendingTransactions,
+
+    // Helper
     getTransaction,
   }
 }

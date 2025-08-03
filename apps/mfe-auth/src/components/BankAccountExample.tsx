@@ -7,7 +7,7 @@ export function BankAccountExample() {
     try {
       const result = await createBankAccount({
         account_type: 'savings', // Conta poupança
-        balance: 1000.0, // Saldo inicial
+        balance: 0, // Saldo inicial
         currency: 'BRL',
       })
 

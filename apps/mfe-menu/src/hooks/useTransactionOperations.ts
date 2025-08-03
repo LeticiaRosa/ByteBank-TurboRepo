@@ -52,7 +52,7 @@ export function useCreateTransaction() {
     mutationFn: (data: CreateTransactionData) =>
       transactionService.createTransaction(data),
 
-    onSuccess: (newTransaction) => {
+    onSuccess: async (newTransaction) => {
       // Atualiza a lista de transações no cache
       queryClient.setQueryData<Transaction[]>(
         QUERY_KEYS.transactions.list(),
@@ -64,11 +64,33 @@ export function useCreateTransaction() {
 
       // Mostra toast de sucesso
       toast.success('Transação criada com sucesso!', {
-        description: `Transação de ${newTransaction.transaction_type} no valor de R$ ${newTransaction.amount.toFixed(2)}`,
+        description: `Transação de ${newTransaction.transaction_type} no valor de ${newTransaction.amount.toLocaleString(
+          'pt-BR',
+          {
+            style: 'currency',
+            currency: 'BRL',
+          },
+        )}`,
         duration: 3000,
       })
 
-      // Invalida queries relacionadas para garantir sincronização
+      // Força o refetch IMEDIATO e FORÇADO das contas bancárias para atualizar saldos
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.all,
+          type: 'active',
+        }),
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.lists(),
+          type: 'active',
+        }),
+        queryClient.refetchQueries({
+          queryKey: QUERY_KEYS.bankAccounts.primary(),
+          type: 'active',
+        }),
+      ])
+
+      // Invalida queries relacionadas para garantir sincronização futura
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.transactions.all })
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bankAccounts.all })
     },

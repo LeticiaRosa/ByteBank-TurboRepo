@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTransactions, type CreateTransactionData } from '../hooks'
-import { type Transaction } from '../lib/transactions'
+import { type Transaction, MoneyUtils } from '../lib/transactions'
 import { useToast } from '@bytebank/ui'
 
 export const Route = createFileRoute('/transacoes')({
@@ -23,6 +23,9 @@ function TransferenciasPage() {
     isLoadingTransactions,
     isLoadingAccounts,
     createTransaction,
+    processTransaction,
+    reprocessPendingTransactions,
+    refreshBankAccounts,
     isCreating,
   } = useTransactions()
 
@@ -38,15 +41,29 @@ function TransferenciasPage() {
 
   const [errors, setErrors] = useState<Partial<TransactionFormData>>({})
 
+  // Efeito para atualizar saldo automaticamente quando há transações pendentes
+  useEffect(() => {
+    const hasPendingTransactions = transactions?.some(
+      (t) => t.status === 'pending',
+    )
+
+    if (hasPendingTransactions) {
+      // Atualizar contas bancárias a cada 10 segundos quando há transações pendentes
+      const interval = setInterval(() => {
+        refreshBankAccounts()
+      }, 10000)
+
+      return () => clearInterval(interval)
+    }
+  }, [transactions, refreshBankAccounts])
   // Função para validar o formulário
   const validateForm = (): boolean => {
     const newErrors: Partial<TransactionFormData> = {}
 
-    // Validar valor
-    const amount = parseFloat(
-      formData.amount.replace(/[^\d,.-]/g, '').replace(',', '.'),
-    )
-    if (!formData.amount || isNaN(amount) || amount <= 0) {
+    // Validar valor usando MoneyUtils para parsing correto
+    const amountInCents = MoneyUtils.parseCurrencyToCents(formData.amount)
+    const amount = MoneyUtils.centsToReais(amountInCents)
+    if (!formData.amount || amount <= 0) {
       newErrors.amount = 'Valor deve ser um número positivo'
     }
 
@@ -68,7 +85,7 @@ function TransferenciasPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  // Função para formatar valor em moeda
+  // Função para formatar valor em moeda (para entrada do usuário)
   const formatCurrency = (value: string): string => {
     // Remove tudo que não é dígito
     const cleanValue = value.replace(/\D/g, '')
@@ -84,6 +101,7 @@ function TransferenciasPage() {
 
   // Função para lidar com mudanças no campo de valor
   const handleAmountChange = (value: string) => {
+    console.log(value)
     const formatted = formatCurrency(value)
     setFormData((prev) => ({ ...prev, amount: formatted }))
 
@@ -121,15 +139,16 @@ function TransferenciasPage() {
     }
 
     try {
-      // Converter valor para número
-      const amount = parseFloat(
-        formData.amount.replace(/[^\d,.-]/g, '').replace(',', '.'),
-      )
+      // Converter valor string para número usando MoneyUtils
+      console.log('Valor original:', formData.amount)
+      const amountInCents = MoneyUtils.parseCurrencyToCents(formData.amount)
+      const amount = MoneyUtils.centsToReais(amountInCents)
+      console.log('Valor convertido para reais:', amount)
 
-      // Preparar dados da transação
+      // Preparar dados da transação (amount já em reais, será convertido no service)
       const transactionData: CreateTransactionData = {
         transaction_type: formData.transaction_type,
-        amount,
+        amount, // Valor em reais - será convertido para centavos no service
         description: formData.description,
         from_account_id: primaryAccount.id,
       }
@@ -152,6 +171,9 @@ function TransferenciasPage() {
 
       // Criar transação
       await createTransaction(transactionData)
+
+      // A atualização automática das contas bancárias agora é feita no hook useCreateTransaction
+      // Não precisamos mais chamar refreshBankAccounts aqui
 
       // Limpar formulário após sucesso
       setFormData({
@@ -211,36 +233,21 @@ function TransferenciasPage() {
                 onChange={(e) =>
                   handleInputChange('transaction_type', e.target.value as any)
                 }
-                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-card-foreground bg-background"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-card-foreground bg-card"
               >
-                <option
-                  value="deposit"
-                  className="text-card-foreground bg-background"
-                >
+                <option value="deposit" className="text-card-foreground ">
                   Depósito
                 </option>
-                <option
-                  value="withdrawal"
-                  className="text-card-foreground bg-background"
-                >
+                <option value="withdrawal" className="text-card-foreground ">
                   Saque
                 </option>
-                <option
-                  value="transfer"
-                  className="text-card-foreground bg-background"
-                >
+                <option value="transfer" className="text-card-foreground ">
                   Transferência
                 </option>
-                <option
-                  value="payment"
-                  className="text-card-foreground bg-background"
-                >
+                <option value="payment" className="text-card-foreground ">
                   Pagamento
                 </option>
-                <option
-                  value="fee"
-                  className="text-card-foreground bg-background"
-                >
+                <option value="fee" className="text-card-foreground ">
                   Taxa
                 </option>
               </select>
@@ -323,8 +330,11 @@ function TransferenciasPage() {
                   {primaryAccount.account_number}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  <strong>Saldo disponível:</strong> R${' '}
-                  {primaryAccount.balance.toFixed(2)}
+                  <strong>Saldo disponível:</strong>{' '}
+                  {primaryAccount.balance.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
                 </p>
               </div>
             )}
@@ -341,9 +351,27 @@ function TransferenciasPage() {
 
         {/* Histórico Recente */}
         <div className="bg-card rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4">
-            Transações Recentes
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-foreground">
+              Transações Recentes
+            </h2>
+
+            {/* Botão para reprocessar transações pendentes */}
+            {transactions &&
+              transactions.some((t) => t.status === 'pending') && (
+                <button
+                  onClick={async () => {
+                    await reprocessPendingTransactions()
+                    // Atualizar saldo imediatamente após reprocessar todas as transações
+                    await refreshBankAccounts()
+                  }}
+                  className="text-sm bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-md transition-colors"
+                  title="Reprocessar transações pendentes"
+                >
+                  Reprocessar Pendentes
+                </button>
+              )}
+          </div>
 
           {isLoadingTransactions ? (
             <div className="flex items-center justify-center py-8">
@@ -487,7 +515,7 @@ function TransferenciasPage() {
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 ${getTransactionBgColor(transaction.transaction_type, isOutgoing)} rounded-full flex items-center justify-center`}
+                        className={`w-10 h-10 ${getTransactionBgColor(transaction.transaction_type, isOutgoing)} rounded-full flex items-center justify-center relative`}
                       >
                         <svg
                           className={`w-5 h-5 ${getTransactionColor(transaction.transaction_type, isOutgoing)}`}
@@ -500,14 +528,48 @@ function TransferenciasPage() {
                             isOutgoing,
                           )}
                         </svg>
+
+                        {/* Indicador de status */}
+                        {transaction.status === 'pending' && (
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                        )}
+                        {transaction.status === 'failed' && (
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+                        )}
+                        {transaction.status === 'completed' && (
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+                        )}
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">
-                          {formatTransactionDescription(
-                            transaction.transaction_type,
-                            isOutgoing,
-                            otherAccountId,
-                          )}
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-foreground">
+                            {formatTransactionDescription(
+                              transaction.transaction_type,
+                              isOutgoing,
+                              otherAccountId,
+                            )}
+                          </p>
+
+                          {/* Badge de status */}
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full font-medium ${
+                              transaction.status === 'pending'
+                                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                : transaction.status === 'completed'
+                                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                  : transaction.status === 'failed'
+                                    ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                            }`}
+                          >
+                            {transaction.status === 'pending' && 'Pendente'}
+                            {transaction.status === 'completed' && 'Concluída'}
+                            {transaction.status === 'failed' && 'Falhou'}
+                            {transaction.status === 'cancelled' && 'Cancelada'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {transaction.description}
                         </p>
                         <p className="text-sm text-muted-foreground">
                           {new Date(transaction.created_at).toLocaleDateString(
@@ -522,17 +584,58 @@ function TransferenciasPage() {
                         </p>
                       </div>
                     </div>
-                    <span
-                      className={`font-medium ${getTransactionColor(transaction.transaction_type, isOutgoing)}`}
-                    >
-                      {isOutgoing ||
-                      transaction.transaction_type === 'withdrawal' ||
-                      transaction.transaction_type === 'payment' ||
-                      transaction.transaction_type === 'fee'
-                        ? '-'
-                        : '+'}
-                      R$ {amount.toFixed(2)}
-                    </span>
+
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`font-medium ${getTransactionColor(transaction.transaction_type, isOutgoing)}`}
+                      >
+                        {isOutgoing ||
+                        transaction.transaction_type === 'withdrawal' ||
+                        transaction.transaction_type === 'payment' ||
+                        transaction.transaction_type === 'fee'
+                          ? '-'
+                          : '+'}
+                        {amount.toLocaleString('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        })}
+                      </span>
+
+                      {/* Botões de ação para transações pendentes */}
+                      {transaction.status === 'pending' && (
+                        <div className="flex gap-1">
+                          <button
+                            onClick={async () => {
+                              await processTransaction(
+                                transaction.id,
+                                'complete',
+                              )
+                              // Atualizar saldo imediatamente após processar transação
+                              await refreshBankAccounts()
+                            }}
+                            className="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded transition-colors"
+                            title="Processar transação"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            onClick={async () => {
+                              await processTransaction(
+                                transaction.id,
+                                'fail',
+                                'Falha manual',
+                              )
+                              // Atualizar saldo imediatamente após processar transação
+                              await refreshBankAccounts()
+                            }}
+                            className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
+                            title="Marcar como falhou"
+                          >
+                            ✗
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )
               })}

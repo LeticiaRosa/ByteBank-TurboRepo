@@ -43,8 +43,8 @@ export const QUERY_CONFIG = {
 
   // Configurações para contas bancárias
   bankAccounts: {
-    staleTime: 1000 * 60 * 5, // 5 minutos
-    gcTime: 1000 * 60 * 10, // 10 minutos
+    staleTime: 0, // 0 segundos - saldos devem ser SEMPRE refetchados
+    gcTime: 1000 * 60 * 5, // 5 minutos
     retry: (failureCount: number, error: any) => {
       if (error.message.includes('Token de autenticação')) {
         return false
