@@ -35,4 +35,6 @@ npm-debug.log*
 .DS_Store
 .DS_Store
 *.pem
-**/__mf__temp
+**/*.__mf__temp/
+**/*-__mf
+apps/*/.__mf__temp/
