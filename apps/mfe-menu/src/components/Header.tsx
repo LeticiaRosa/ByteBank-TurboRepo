@@ -1,8 +1,12 @@
 import { Logo } from './Logo'
 import { UserDropdown } from './UserDropdown'
 import type { User } from '../types/user'
+import { useAuth } from 'auth/useAuth'
 
 export default function Header() {
+  const { user: usuario } = useAuth()
+
+  console.log('User data:', usuario)
   // Dados fake do usuário
   const user: User = {
     user_metadata: {

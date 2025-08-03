@@ -27,7 +27,7 @@ export default defineConfig({
       manifest: true,
       //     // Modules to expose
       exposes: {
-        './dashboard': './src/components/Header.tsx',
+        './dashboard': './src/routes/__root.tsx',
       },
       remotes: {
         auth: {
