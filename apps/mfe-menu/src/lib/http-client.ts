@@ -113,7 +113,74 @@ export class HttpClient {
       )
     }
 
-    return response.json()
+    // Verificar se há conteúdo na resposta antes de tentar fazer parse do JSON
+    const contentLength = response.headers.get('content-length')
+    const contentType = response.headers.get('content-type')
+
+    // Se não há conteúdo ou content-length é 0, retornar undefined
+    if (contentLength === '0' || response.status === 204) {
+      return undefined as T
+    }
+
+    // Se há content-type de JSON, tentar fazer parse
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text()
+      return text ? JSON.parse(text) : (undefined as T)
+    }
+
+    // Para outros casos, retornar undefined
+    return undefined as T
+  }
+
+  /**
+   * Requisição PATCH genérica (recomendada para atualizações no Supabase)
+   */
+  public async patch<T>(
+    endpoint: string,
+    data: any,
+    options?: { returnRepresentation?: boolean },
+  ): Promise<T> {
+    const headers: Record<string, string> = {
+      ...this.getAuthHeaders(),
+    } as Record<string, string>
+
+    if (options?.returnRepresentation) {
+      headers['Prefer'] = 'return=representation'
+    }
+
+    const response = await fetch(`${this.baseUrl}/rest/v1${endpoint}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(
+        `Erro na requisição PATCH: ${response.statusText} - ${errorText}`,
+      )
+    }
+
+    // Verificar se há conteúdo na resposta antes de tentar fazer parse do JSON
+    const contentLength = response.headers.get('content-length')
+    const contentType = response.headers.get('content-type')
+
+    // Se não há conteúdo ou content-length é 0, retornar undefined
+    if (contentLength === '0' || response.status === 204) {
+      return undefined as T
+    }
+
+    // Se há content-type de JSON, tentar fazer parse
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text()
+      if (text) {
+        const result = JSON.parse(text)
+        return Array.isArray(result) ? result[0] : result
+      }
+    }
+
+    // Para outros casos, retornar undefined
+    return undefined as T
   }
 
   /**
@@ -132,7 +199,23 @@ export class HttpClient {
       )
     }
 
-    return response.json()
+    // Verificar se há conteúdo na resposta antes de tentar fazer parse do JSON
+    const contentLength = response.headers.get('content-length')
+    const contentType = response.headers.get('content-type')
+
+    // Se não há conteúdo ou content-length é 0, retornar undefined
+    if (contentLength === '0' || response.status === 204) {
+      return undefined as T
+    }
+
+    // Se há content-type de JSON, tentar fazer parse
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text()
+      return text ? JSON.parse(text) : (undefined as T)
+    }
+
+    // Para outros casos, retornar undefined
+    return undefined as T
   }
 }
 

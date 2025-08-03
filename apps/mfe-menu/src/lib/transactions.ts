@@ -189,10 +189,15 @@ export class TransactionService {
       updateData.amount = MoneyUtils.reaisToCents(data.amount)
     }
 
-    const transaction = await httpClient.put<Transaction>(
-      `/transactions?id=eq.${transactionId}`,
+    const transaction = await httpClient.patch<Transaction>(
+      `/transactions?id=eq.${transactionId}&user_id=eq.${userId}`,
       updateData,
+      { returnRepresentation: true },
     )
+
+    if (!transaction) {
+      throw new Error('Falha ao atualizar transação - resposta vazia')
+    }
 
     // Converter valor de volta para reais na resposta
     return {
