@@ -9,8 +9,9 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@bytebank/ui'
-import { Link, useRouter } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { ThemeProvider } from '../hooks/useTheme'
+import { useEffect } from 'react'
 
 const menuItems = [
   {
@@ -96,8 +97,12 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const router = useRouter()
-  const currentPath = router.state.location.pathname
+  const location = useLocation()
+  const currentPath = location.pathname
+
+  const currentPathWithoutBase = currentPath.startsWith('/app2')
+    ? currentPath.replace('/app2', '') || '/'
+    : currentPath
 
   return (
     <ThemeProvider>
@@ -123,7 +128,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <SidebarContent className="bg-sidebar">
               <SidebarMenu className="p-2">
                 {menuItems.map((item) => {
-                  const isActive = currentPath === item.path
+                  const isActive = currentPathWithoutBase === item.path
+
                   return (
                     <SidebarMenuItem key={item.path}>
                       <SidebarMenuButton asChild isActive={isActive}>
