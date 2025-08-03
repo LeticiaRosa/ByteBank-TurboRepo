@@ -32,21 +32,19 @@ interface AppRouterProps {
   enableDevtools?: boolean
 }
 
-const AppRouter: React.FC<AppRouterProps> = ({ basePath = '' }) => {
+const AppRouter: React.FC<AppRouterProps> = () => {
   // Se precisar de basePath diferente, recrie o router
-  const routerInstance = basePath
-    ? createRouter({
-        routeTree,
-        context: {
-          ...TanStackQueryProviderContext,
-        },
-        basepath: basePath,
-        defaultPreload: 'intent',
-        scrollRestoration: true,
-        defaultStructuralSharing: true,
-        defaultPreloadStaleTime: 0,
-      })
-    : router
+  const routerInstance = createRouter({
+    routeTree,
+    context: {
+      ...TanStackQueryProviderContext,
+    },
+    basepath: 'app2',
+    defaultPreload: 'intent',
+    scrollRestoration: true,
+    defaultStructuralSharing: true,
+    defaultPreloadStaleTime: 0,
+  })
 
   return (
     <StrictMode>
