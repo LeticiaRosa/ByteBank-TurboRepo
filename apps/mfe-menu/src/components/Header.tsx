@@ -27,7 +27,7 @@ const Logo = () => (
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-teal-600 border-b border-teal-700">
+    <header className="sticky top-0 z-50 w-full bg-primary border-b border-primary/80">
       <div className="flex h-16 w-full items-center justify-between px-6">
         {/* Logo Section */}
         <div className="flex items-center">
@@ -114,7 +114,7 @@ export default function Header() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => console.log('Sign out')}
-                  className="cursor-pointer text-red-600 focus:text-red-600"
+                  className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <svg
                     className="mr-2 h-4 w-4"

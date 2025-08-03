@@ -7,16 +7,16 @@ export const Route = createFileRoute('/outros-servicos')({
 function OutrosServicosPage() {
   return (
     <div className="max-w-6xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Outros Serviços</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Outros Serviços</h1>
 
       {/* Grid de Serviços */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Cartões */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
               <svg
-                className="w-6 h-6 text-blue-600"
+                className="w-6 h-6 text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -30,24 +30,24 @@ function OutrosServicosPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Cartões</h3>
-              <p className="text-sm text-gray-500">Gerencie seus cartões</p>
+              <h3 className="font-semibold text-foreground">Cartões</h3>
+              <p className="text-sm text-muted-foreground">Gerencie seus cartões</p>
             </div>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Consulte faturas, altere limites e solicite novos cartões.
           </p>
-          <button className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors">
+          <button className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition-colors">
             Acessar
           </button>
         </div>
 
         {/* Empréstimos */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-chart-1/10 rounded-lg flex items-center justify-center">
               <svg
-                className="w-6 h-6 text-green-600"
+                className="w-6 h-6 text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -61,24 +61,24 @@ function OutrosServicosPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Empréstimos</h3>
-              <p className="text-sm text-gray-500">Simule e contrate</p>
+              <h3 className="font-semibold text-foreground">Empréstimos</h3>
+              <p className="text-sm text-muted-foreground">Simule e contrate</p>
             </div>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Taxas especiais e aprovação rápida para clientes ByteBank.
           </p>
-          <button className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors">
+          <button className="w-full bg-chart-1 text-white py-2 px-4 rounded hover:bg-chart-1/90 transition-colors">
             Simular
           </button>
         </div>
 
         {/* Seguros */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
               <svg
-                className="w-6 h-6 text-purple-600"
+                className="w-6 h-6 text-secondary-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -92,24 +92,24 @@ function OutrosServicosPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Seguros</h3>
-              <p className="text-sm text-gray-500">Proteja o que importa</p>
+              <h3 className="font-semibold text-foreground">Seguros</h3>
+              <p className="text-sm text-muted-foreground">Proteja o que importa</p>
             </div>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Seguro de vida, auto, residencial e muito mais.
           </p>
-          <button className="w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors">
+          <button className="w-full bg-accent text-white py-2 px-4 rounded hover:bg-accent/90 transition-colors">
             Contratar
           </button>
         </div>
 
         {/* PIX */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-chart-2/10 rounded-lg flex items-center justify-center">
               <svg
-                className="w-6 h-6 text-orange-600"
+                className="w-6 h-6 text-accent-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -123,26 +123,26 @@ function OutrosServicosPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">PIX</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="font-semibold text-foreground">PIX</h3>
+              <p className="text-sm text-muted-foreground">
                 Transferências instantâneas
               </p>
             </div>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Gerencie suas chaves PIX e faça transferências 24h.
           </p>
-          <button className="w-full bg-orange-600 text-white py-2 px-4 rounded hover:bg-orange-700 transition-colors">
+          <button className="w-full bg-chart-2 text-white py-2 px-4 rounded hover:bg-chart-2/90 transition-colors">
             Configurar
           </button>
         </div>
 
         {/* Pagamentos */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-destructive/10 rounded-lg flex items-center justify-center">
               <svg
-                className="w-6 h-6 text-red-600"
+                className="w-6 h-6 text-destructive"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -156,24 +156,24 @@ function OutrosServicosPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Pagamentos</h3>
-              <p className="text-sm text-gray-500">Boletos e contas</p>
+              <h3 className="font-semibold text-foreground">Pagamentos</h3>
+              <p className="text-sm text-muted-foreground">Boletos e contas</p>
             </div>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Pague boletos, contas de luz, água, telefone e muito mais.
           </p>
-          <button className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors">
+          <button className="w-full bg-destructive text-white py-2 px-4 rounded hover:bg-destructive/90 transition-colors">
             Pagar Conta
           </button>
         </div>
 
         {/* Atendimento */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
               <svg
-                className="w-6 h-6 text-teal-600"
+                className="w-6 h-6 text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -187,14 +187,14 @@ function OutrosServicosPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Atendimento</h3>
-              <p className="text-sm text-gray-500">Suporte 24/7</p>
+              <h3 className="font-semibold text-foreground">Atendimento</h3>
+              <p className="text-sm text-muted-foreground">Suporte 24/7</p>
             </div>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-muted-foreground text-sm mb-4">
             Chat, telefone ou agendamento presencial.
           </p>
-          <button className="w-full bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition-colors">
+          <button className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition-colors">
             Falar Conosco
           </button>
         </div>
@@ -202,94 +202,94 @@ function OutrosServicosPage() {
 
       {/* Seção de Recados e Notificações */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
+          <h2 className="text-xl font-semibold text-foreground mb-4">
             Notificações
           </h2>
 
           <div className="space-y-3">
-            <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+            <div className="flex items-start gap-3 p-3 bg-accent/10 rounded-lg">
+              <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-foreground">
                   Nova funcionalidade PIX
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   Agora você pode programar transferências PIX
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Há 2 horas</p>
+                <p className="text-xs text-muted-foreground mt-1">Há 2 horas</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-              <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
+            <div className="flex items-start gap-3 p-3 bg-primary/10 rounded-lg">
+              <div className="w-2 h-2 bg-chart-1 rounded-full mt-2"></div>
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-foreground">
                   Fatura do cartão disponível
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   Vencimento em 15/08/2025
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Ontem</p>
+                <p className="text-xs text-muted-foreground mt-1">Ontem</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
-              <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2"></div>
+            <div className="flex items-start gap-3 p-3 bg-secondary/20 rounded-lg">
+              <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-foreground">
                   Promoção especial
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   Taxa zero para novos investimentos
                 </p>
-                <p className="text-xs text-gray-500 mt-1">3 dias atrás</p>
+                <p className="text-xs text-muted-foreground mt-1">3 dias atrás</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
+          <h2 className="text-xl font-semibold text-foreground mb-4">
             Configurações Rápidas
           </h2>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-foreground">
                   Notificações por email
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   Receba avisos importantes
                 </p>
               </div>
-              <button className="w-12 h-6 bg-teal-600 rounded-full relative">
-                <div className="w-4 h-4 bg-white rounded-full absolute right-1 top-1"></div>
+              <button className="w-12 h-6 bg-primary rounded-full relative">
+                <div className="w-4 h-4 bg-card rounded-full absolute right-1 top-1"></div>
               </button>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900">Notificações push</p>
-                <p className="text-sm text-gray-500">Alerts no celular</p>
+                <p className="font-medium text-foreground">Notificações push</p>
+                <p className="text-sm text-muted-foreground">Alerts no celular</p>
               </div>
-              <button className="w-12 h-6 bg-gray-300 rounded-full relative">
-                <div className="w-4 h-4 bg-white rounded-full absolute left-1 top-1"></div>
+              <button className="w-12 h-6 bg-muted rounded-full relative">
+                <div className="w-4 h-4 bg-card rounded-full absolute left-1 top-1"></div>
               </button>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900">Resumo mensal</p>
-                <p className="text-sm text-gray-500">Relatório por email</p>
+                <p className="font-medium text-foreground">Resumo mensal</p>
+                <p className="text-sm text-muted-foreground">Relatório por email</p>
               </div>
-              <button className="w-12 h-6 bg-teal-600 rounded-full relative">
-                <div className="w-4 h-4 bg-white rounded-full absolute right-1 top-1"></div>
+              <button className="w-12 h-6 bg-primary rounded-full relative">
+                <div className="w-4 h-4 bg-card rounded-full absolute right-1 top-1"></div>
               </button>
             </div>
 
-            <button className="w-full mt-4 text-teal-600 hover:text-teal-700 font-medium text-sm border border-teal-600 py-2 px-4 rounded hover:bg-teal-50 transition-colors">
+            <button className="w-full mt-4 text-primary hover:text-primary/90 font-medium text-sm border border-primary py-2 px-4 rounded hover:bg-primary/10 transition-colors">
               Ver todas as configurações
             </button>
           </div>

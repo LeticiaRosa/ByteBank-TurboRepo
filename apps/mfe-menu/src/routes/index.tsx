@@ -24,7 +24,7 @@ function HomePage() {
           <h3 className="text-lg font-semibold text-card-foreground mb-2">
             Receitas do Mês
           </h3>
-          <p className="text-3xl font-bold text-green-600">R$ 3.200,00</p>
+          <p className="text-3xl font-bold text-primary">R$ 3.200,00</p>
           <p className="text-sm text-muted-foreground mt-1">
             +12% vs mês anterior
           </p>

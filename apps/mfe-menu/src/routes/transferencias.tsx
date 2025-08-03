@@ -7,62 +7,62 @@ export const Route = createFileRoute('/transferencias')({
 function TransferenciasPage() {
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Transferências</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Transferências</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Formulário de Transferência */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
+          <h2 className="text-xl font-semibold text-foreground mb-4">
             Nova Transferência
           </h2>
 
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-card-foreground mb-1">
                 Conta de Origem
               </label>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <select className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
                 <option>Conta Corrente - R$ 2.580,45</option>
                 <option>Conta Poupança - R$ 5.200,00</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-card-foreground mb-1">
                 Conta de Destino
               </label>
               <input
                 type="text"
                 placeholder="Digite a conta ou CPF/CNPJ"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-card-foreground mb-1">
                 Valor
               </label>
               <input
                 type="text"
                 placeholder="R$ 0,00"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-card-foreground mb-1">
                 Descrição (opcional)
               </label>
               <input
                 type="text"
                 placeholder="Motivo da transferência"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors font-medium"
+              className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors font-medium"
             >
               Transferir
             </button>
@@ -70,17 +70,17 @@ function TransferenciasPage() {
         </div>
 
         {/* Histórico Recente */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
+          <h2 className="text-xl font-semibold text-foreground mb-4">
             Transferências Recentes
           </h2>
 
           <div className="space-y-3">
-            <div className="flex items-center justify-between py-3 border-b border-gray-100">
+            <div className="flex items-center justify-between py-3 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-destructive/10 rounded-full flex items-center justify-center">
                   <svg
-                    className="w-5 h-5 text-red-600"
+                    className="w-5 h-5 text-destructive"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -94,18 +94,18 @@ function TransferenciasPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">João Silva</p>
-                  <p className="text-sm text-gray-500">Hoje, 14:30</p>
+                  <p className="font-medium text-foreground">João Silva</p>
+                  <p className="text-sm text-muted-foreground">Hoje, 14:30</p>
                 </div>
               </div>
-              <span className="text-red-600 font-medium">-R$ 250,00</span>
+              <span className="text-destructive font-medium">-R$ 250,00</span>
             </div>
 
-            <div className="flex items-center justify-between py-3 border-b border-gray-100">
+            <div className="flex items-center justify-between py-3 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-chart-1/10 rounded-full flex items-center justify-center">
                   <svg
-                    className="w-5 h-5 text-green-600"
+                    className="w-5 h-5 text-chart-1"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -119,18 +119,18 @@ function TransferenciasPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">Maria Santos</p>
-                  <p className="text-sm text-gray-500">Ontem, 09:15</p>
+                  <p className="font-medium text-foreground">Maria Santos</p>
+                  <p className="text-sm text-muted-foreground">Ontem, 09:15</p>
                 </div>
               </div>
-              <span className="text-green-600 font-medium">+R$ 500,00</span>
+              <span className="text-chart-1 font-medium">+R$ 500,00</span>
             </div>
 
-            <div className="flex items-center justify-between py-3 border-b border-gray-100">
+            <div className="flex items-center justify-between py-3 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-destructive/10 rounded-full flex items-center justify-center">
                   <svg
-                    className="w-5 h-5 text-red-600"
+                    className="w-5 h-5 text-destructive"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -144,15 +144,15 @@ function TransferenciasPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">Pedro Oliveira</p>
-                  <p className="text-sm text-gray-500">25/07, 16:45</p>
+                  <p className="font-medium text-foreground">Pedro Oliveira</p>
+                  <p className="text-sm text-muted-foreground">25/07, 16:45</p>
                 </div>
               </div>
-              <span className="text-red-600 font-medium">-R$ 120,00</span>
+              <span className="text-destructive font-medium">-R$ 120,00</span>
             </div>
           </div>
 
-          <button className="w-full mt-4 text-teal-600 hover:text-teal-700 font-medium text-sm">
+          <button className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm">
             Ver todas as transferências
           </button>
         </div>
