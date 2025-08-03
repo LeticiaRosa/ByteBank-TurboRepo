@@ -1,4 +1,5 @@
 import { type Transaction, type BankAccount } from '../../hooks'
+import { Button } from '@bytebank/ui'
 
 interface TransactionItemProps {
   transaction: Transaction
@@ -263,8 +264,7 @@ export function TransactionItem({
         <span
           className={`font-medium ${getTransactionColor(transaction.transaction_type, isOutgoing)}`}
         >
-          {isOutgoing ||
-          transaction.transaction_type === 'withdrawal' ||
+          {transaction.transaction_type === 'withdrawal' ||
           transaction.transaction_type === 'payment' ||
           transaction.transaction_type === 'fee'
             ? '-'
@@ -279,9 +279,10 @@ export function TransactionItem({
         <div className="flex gap-2">
           {/* Botão de editar - disponível para transações pending e failed */}
           {onEditTransaction && (
-            <button
+            <Button
               onClick={handleEditTransaction}
-              className="flex items-center gap-1 text-xs bg-primary text-primary-foreground hover:bg-primary/90   px-3 py-1.5 rounded-md transition-colors shadow-sm"
+              size="sm"
+              className="flex items-center gap-1 text-xs bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-1.5 rounded-md transition-colors shadow-sm"
               title="Editar transação"
             >
               <svg
@@ -298,13 +299,15 @@ export function TransactionItem({
                 />
               </svg>
               Editar
-            </button>
+            </Button>
           )}
 
           {/* Botão de excluir - disponível para transações pending e failed */}
           {onDeleteTransaction && (
-            <button
+            <Button
               onClick={handleDeleteTransaction}
+              size="sm"
+              variant="destructive"
               className="flex items-center gap-1 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90 px-3 py-1.5 rounded-md transition-colors shadow-sm"
               title="Excluir transação"
             >
@@ -322,7 +325,7 @@ export function TransactionItem({
                 />
               </svg>
               Excluir
-            </button>
+            </Button>
           )}
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Button } from '@bytebank/ui'
 
 export const Route = createFileRoute('/investimentos')({
   component: InvestimentosPage,
@@ -105,9 +106,12 @@ function InvestimentosPage() {
             </div>
           </div>
 
-          <button className="w-full mt-4 text-primary hover:text-primary/90 font-medium text-sm">
+          <Button
+            variant="ghost"
+            className="w-full mt-4 text-primary hover:text-primary/90 font-medium text-sm"
+          >
             Ver todos os investimentos
-          </button>
+          </Button>
         </div>
 
         {/* Oportunidades */}
@@ -132,9 +136,9 @@ function InvestimentosPage() {
               <p className="text-sm text-muted-foreground mb-3">
                 Prazo: 720 dias • Liquidez no vencimento
               </p>
-              <button className="w-full bg-primary text-white py-2 px-4 rounded text-sm hover:bg-primary/90 transition-colors">
+              <Button className="w-full bg-primary text-white py-2 px-4 rounded text-sm hover:bg-primary/90 transition-colors">
                 Investir Agora
-              </button>
+              </Button>
             </div>
 
             <div className="border rounded-lg p-4">
@@ -150,9 +154,12 @@ function InvestimentosPage() {
               <p className="text-sm text-muted-foreground mb-3">
                 Prazo: 1080 dias • Mín: R$ 5.000
               </p>
-              <button className="w-full border border-primary text-primary py-2 px-4 rounded text-sm hover:bg-primary/10 transition-colors">
+              <Button
+                variant="outline"
+                className="w-full border border-primary text-primary py-2 px-4 rounded text-sm hover:bg-primary/10 transition-colors"
+              >
                 Saiba Mais
-              </button>
+              </Button>
             </div>
 
             <div className="border rounded-lg p-4">
@@ -165,14 +172,17 @@ function InvestimentosPage() {
                     Diversificação automática
                   </p>
                 </div>
-                <span className="text-accent font-bold">CDI + 3%</span>
+                <span className="text-primary font-bold">CDI + 3%</span>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Liquidez: D+30 • Mín: R$ 500
               </p>
-              <button className="w-full border border-accent text-accent py-2 px-4 rounded text-sm hover:bg-accent/10 transition-colors">
+              <Button
+                variant="outline"
+                className="w-full border border-primary text-primary py-2 px-4 rounded text-sm hover:bg-accent/10 transition-colors"
+              >
                 Saiba Mais
-              </button>
+              </Button>
             </div>
           </div>
         </div>

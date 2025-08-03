@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useToast } from '@bytebank/ui'
+import { useToast, Button } from '@bytebank/ui'
 import {
   type CreateTransactionData,
   type BankAccount,
@@ -244,13 +244,14 @@ export function NewTransactionForm({
 
         {/* Botão para cancelar edição */}
         {isEditing && onCancelEdit && (
-          <button
+          <Button
             type="button"
             onClick={onCancelEdit}
+            variant="ghost"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Cancelar
-          </button>
+          </Button>
         )}
       </div>
 
@@ -275,7 +276,7 @@ export function NewTransactionForm({
             onChange={(e) =>
               handleInputChange('transaction_type', e.target.value as any)
             }
-            className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-card-foreground bg-card"
+            className="w-full pl-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-card-foreground bg-card"
           >
             <option value="deposit" className="text-card-foreground">
               Depósito
@@ -378,7 +379,7 @@ export function NewTransactionForm({
           </div>
         )}
 
-        <button
+        <Button
           type="submit"
           disabled={isCreating || isUpdating}
           className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-md hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
@@ -388,7 +389,7 @@ export function NewTransactionForm({
             : isEditing
               ? 'Atualizar Transação'
               : 'Efetuar Transação'}
-        </button>
+        </Button>
       </form>
     </div>
   )

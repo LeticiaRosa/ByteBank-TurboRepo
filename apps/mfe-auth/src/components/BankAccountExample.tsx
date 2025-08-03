@@ -1,4 +1,5 @@
 import { useAuth } from '../hooks/useAuth'
+import { Button } from '@bytebank/ui'
 
 export function BankAccountExample() {
   const { user, createBankAccount, loading } = useAuth()
@@ -38,13 +39,13 @@ export function BankAccountExample() {
         <p>Nome: {user.user_metadata?.full_name || 'Não informado'}</p>
       </div>
 
-      <button
+      <Button
         onClick={handleCreateBankAccount}
         disabled={loading}
         className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:opacity-50"
       >
         {loading ? 'Criando...' : 'Criar Conta Poupança'}
-      </button>
+      </Button>
 
       <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
         <h4 className="font-semibold mb-2">ℹ️ Informação:</h4>

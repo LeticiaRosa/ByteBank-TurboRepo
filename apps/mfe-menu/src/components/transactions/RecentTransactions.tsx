@@ -1,5 +1,6 @@
 import { type Transaction, type BankAccount } from '../../hooks'
 import { TransactionItem } from './TransactionItem'
+import { Button } from '@bytebank/ui'
 
 interface RecentTransactionsProps {
   transactions: Transaction[] | undefined
@@ -62,13 +63,14 @@ export function RecentTransactions({
 
         {/* Botão para reprocessar transações pendentes */}
         {transactions && transactions.some((t) => t.status === 'pending') && (
-          <button
+          <Button
             onClick={handleReprocessAllPending}
+            size="sm"
             className="text-sm bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-md transition-colors"
             title="Reprocessar transações pendentes"
           >
             Reprocessar Pendentes
-          </button>
+          </Button>
         )}
       </div>
 
@@ -111,12 +113,13 @@ export function RecentTransactions({
       )}
 
       {transactions && transactions.length > 5 && (
-        <button
+        <Button
+          variant="ghost"
           className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm"
           onClick={handleViewAllTransactions}
         >
           Ver todas as transações ({transactions.length})
-        </button>
+        </Button>
       )}
     </div>
   )

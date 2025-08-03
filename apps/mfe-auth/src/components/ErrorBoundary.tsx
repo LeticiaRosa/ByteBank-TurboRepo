@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from '@bytebank/ui'
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -37,12 +38,12 @@ export class ErrorBoundary extends React.Component<
             <p className="text-gray-600 mb-4">
               {this.state.error?.message || 'Um erro inesperado ocorreu.'}
             </p>
-            <button
+            <Button
               onClick={() => window.location.reload()}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Recarregar página
-            </button>
+            </Button>
           </div>
         </div>
       )
