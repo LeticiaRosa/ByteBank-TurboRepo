@@ -1,59 +1,16 @@
-import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { Toaster } from '@bytebank/ui'
-
-import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
-
-// Import the generated route tree
-import { routeTree } from './routeTree.gen'
-
+import AppRouter from './AppRouter'
 import reportWebVitals from './reportWebVitals.ts'
-import '@bytebank/ui/globals.css'
-import { ThemeProvider } from './providers/theme.tsx'
-// Create a new router instance
 
-const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
-const router = createRouter({
-  routeTree,
-  context: {
-    ...TanStackQueryProviderContext,
-  },
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-  defaultStructuralSharing: true,
-  defaultPreloadStaleTime: 0,
-})
-
-// Register the router instance for type safety
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
-
-// Render the app
+// Render the app apenas quando executado standalone
 const rootElement = document.getElementById('app')
-
-if (rootElement) {
-  // Clear any existing content to avoid hydration mismatch
-  rootElement.innerHTML = ''
-
+if (rootElement && !rootElement.hasChildNodes()) {
   const root = ReactDOM.createRoot(rootElement)
-
-  root.render(
-    <StrictMode>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-          <RouterProvider router={router} />
-          <Toaster />
-        </TanStackQueryProvider.Provider>
-      </ThemeProvider>
-    </StrictMode>,
-  )
+  root.render(<AppRouter enableDevtools={true} />)
+} else if (rootElement) {
+  rootElement.innerHTML = ''
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(<AppRouter enableDevtools={true} />)
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()

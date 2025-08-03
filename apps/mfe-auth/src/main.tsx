@@ -35,10 +35,22 @@ declare module '@tanstack/react-router' {
 // Render the app
 const rootElement = document.getElementById('app')
 
-if (rootElement) {
-  // Clear any existing content to avoid hydration mismatch
-  rootElement.innerHTML = ''
+if (rootElement && !rootElement.hasChildNodes()) {
+  const root = ReactDOM.createRoot(rootElement)
 
+  root.render(
+    <StrictMode>
+      <ErrorBoundary>
+        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+          <RouterProvider router={router} />
+          <Toaster />
+        </TanStackQueryProvider.Provider>
+      </ErrorBoundary>
+    </StrictMode>,
+  )
+} else if (rootElement) {
+  // Element exists but has content, clear and recreate
+  rootElement.innerHTML = ''
   const root = ReactDOM.createRoot(rootElement)
 
   root.render(

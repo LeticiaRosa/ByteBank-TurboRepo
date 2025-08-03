@@ -1,9 +1,26 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+// Create a singleton QueryClient to prevent multiple instances
+let queryClientInstance: QueryClient | null = null
+
+function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 1 minute
+        refetchOnWindowFocus: false,
+      },
+    },
+  })
+}
+
 export function getContext() {
-  const queryClient = new QueryClient()
+  if (!queryClientInstance) {
+    queryClientInstance = createQueryClient()
+  }
+
   return {
-    queryClient,
+    queryClient: queryClientInstance,
   }
 }
 
