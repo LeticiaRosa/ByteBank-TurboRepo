@@ -102,10 +102,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <Sidebar>
-          <SidebarHeader className="p-4 border-b">
-            <h2 className="text-lg font-semibold">Menu</h2>
+          <SidebarHeader className="p-4 border-b border-sidebar-border">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
+                <svg
+                  className="h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <span className="text-lg font-bold text-sidebar-foreground">
+                ByteBank
+              </span>
+            </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="bg-sidebar">
             <SidebarMenu className="p-2">
               {menuItems.map((item) => {
                 const isActive = currentPath === item.path
@@ -114,7 +127,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     <SidebarMenuButton asChild isActive={isActive}>
                       <Link
                         to={item.path}
-                        className="flex items-center gap-3 px-3 py-2"
+                        className="flex items-center gap-3 px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
                       >
                         {item.icon}
                         <span>{item.title}</span>
@@ -128,7 +141,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </Sidebar>
         <SidebarInset className="flex-1">
           <Header />
-          <main className="flex-1 p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <main className="flex-1 p-6 bg-background min-h-[calc(100vh-4rem)]">
             {children}
           </main>
         </SidebarInset>

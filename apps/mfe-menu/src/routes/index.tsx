@@ -7,46 +7,50 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Início</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Início</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Card de Saldo */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="bg-card rounded-lg shadow-sm border-border border p-6">
+          <h3 className="text-lg font-semibold text-card-foreground mb-2">
             Saldo Atual
           </h3>
-          <p className="text-3xl font-bold text-teal-600">R$ 2.580,45</p>
-          <p className="text-sm text-gray-500 mt-1">Conta Corrente</p>
+          <p className="text-3xl font-bold text-primary">R$ 2.580,45</p>
+          <p className="text-sm text-muted-foreground mt-1">Conta Corrente</p>
         </div>
 
         {/* Card de Receitas */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="bg-card rounded-lg shadow-sm border-border border p-6">
+          <h3 className="text-lg font-semibold text-card-foreground mb-2">
             Receitas do Mês
           </h3>
           <p className="text-3xl font-bold text-green-600">R$ 3.200,00</p>
-          <p className="text-sm text-gray-500 mt-1">+12% vs mês anterior</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            +12% vs mês anterior
+          </p>
         </div>
 
         {/* Card de Gastos */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="bg-card rounded-lg shadow-sm border-border border p-6">
+          <h3 className="text-lg font-semibold text-card-foreground mb-2">
             Gastos do Mês
           </h3>
-          <p className="text-3xl font-bold text-red-600">R$ 1.450,20</p>
-          <p className="text-sm text-gray-500 mt-1">-5% vs mês anterior</p>
+          <p className="text-3xl font-bold text-destructive">R$ 1.450,20</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            -5% vs mês anterior
+          </p>
         </div>
       </div>
 
       {/* Seção de Ações Rápidas */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+      <div className="bg-card rounded-lg shadow-sm border-border border p-6">
+        <h2 className="text-xl font-semibold text-card-foreground mb-4">
           Ações Rápidas
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <button className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent hover:text-accent-foreground transition-colors">
             <svg
-              className="h-8 w-8 text-teal-600 mb-2"
+              className="h-8 w-8 text-primary mb-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -61,9 +65,9 @@ function HomePage() {
             <span className="text-sm font-medium">Transferir</span>
           </button>
 
-          <button className="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <button className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent hover:text-accent-foreground transition-colors">
             <svg
-              className="h-8 w-8 text-teal-600 mb-2"
+              className="h-8 w-8 text-primary mb-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -78,9 +82,9 @@ function HomePage() {
             <span className="text-sm font-medium">Pagar</span>
           </button>
 
-          <button className="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <button className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent hover:text-accent-foreground transition-colors">
             <svg
-              className="h-8 w-8 text-teal-600 mb-2"
+              className="h-8 w-8 text-primary mb-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -95,9 +99,9 @@ function HomePage() {
             <span className="text-sm font-medium">Investir</span>
           </button>
 
-          <button className="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <button className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent hover:text-accent-foreground transition-colors">
             <svg
-              className="h-8 w-8 text-teal-600 mb-2"
+              className="h-8 w-8 text-primary mb-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
