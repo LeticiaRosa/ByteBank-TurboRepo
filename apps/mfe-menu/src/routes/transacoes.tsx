@@ -101,7 +101,6 @@ function TransferenciasPage() {
 
   // Função para lidar com mudanças no campo de valor
   const handleAmountChange = (value: string) => {
-    console.log(value)
     const formatted = formatCurrency(value)
     setFormData((prev) => ({ ...prev, amount: formatted }))
 
@@ -140,10 +139,8 @@ function TransferenciasPage() {
 
     try {
       // Converter valor string para número usando MoneyUtils
-      console.log('Valor original:', formData.amount)
       const amountInCents = MoneyUtils.parseCurrencyToCents(formData.amount)
       const amount = MoneyUtils.centsToReais(amountInCents)
-      console.log('Valor convertido para reais:', amount)
 
       // Preparar dados da transação (amount já em reais, será convertido no service)
       const transactionData: CreateTransactionData = {

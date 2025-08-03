@@ -31,7 +31,6 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
         // Redireciona para a tela de login após mostrar o toast
         setTimeout(() => {
-          console.log('Redirecionando para login - usuário não autenticado')
           window.location.href = 'http://localhost:3001'
         }, 1000)
       }

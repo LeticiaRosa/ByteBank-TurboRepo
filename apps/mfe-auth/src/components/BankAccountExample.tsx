@@ -12,14 +12,11 @@ export function BankAccountExample() {
       })
 
       if (result.success) {
-        console.log('Conta bancária criada:', result.bankAccount)
         alert('Conta bancária criada com sucesso!')
       } else {
-        console.error('Erro:', result.error)
         alert(`Erro ao criar conta: ${result.error?.message}`)
       }
     } catch (error) {
-      console.error('Erro inesperado:', error)
       alert('Erro inesperado ao criar conta bancária')
     }
   }

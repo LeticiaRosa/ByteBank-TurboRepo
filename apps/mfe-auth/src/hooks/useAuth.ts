@@ -179,7 +179,6 @@ export function useAuth() {
       accountData: CreateBankAccountData
     }) => bankAccountService.createBankAccount(userId, accountData),
     onSuccess: (bankAccount) => {
-      console.log('Conta bancária criada com sucesso:', bankAccount)
       // Invalida queries relacionadas a contas bancárias se houver
       queryClient.invalidateQueries({ queryKey: ['bank_accounts'] })
     },
@@ -258,9 +257,6 @@ export function useAuth() {
               currency: 'BRL',
             },
           })
-          console.log(
-            'Conta bancária criada automaticamente para o novo usuário',
-          )
         } catch (bankAccountError: any) {
           // Se falhar ao criar a conta bancária, ainda retorna sucesso no signup
           // mas loga o erro para investigação

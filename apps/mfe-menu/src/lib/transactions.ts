@@ -143,7 +143,6 @@ export class TransactionService {
     if (!userId) {
       throw new Error('Usuário não autenticado')
     }
-    console.log('Dados da transação:', data)
     // Converter valor de reais para centavos antes de salvar
     const transactionData = {
       ...data,
@@ -245,9 +244,6 @@ export class TransactionService {
       )
 
       await Promise.all(processPromises)
-      console.log(
-        `Reprocessadas ${pendingTransactions.length} transações pendentes`,
-      )
     } catch (error) {
       console.error('Erro ao reprocessar transações pendentes:', error)
       throw error
