@@ -3,7 +3,12 @@ import { authService } from './auth'
 // Configurações para upload de arquivos
 const RECEIPT_BUCKET = 'byte-bank'
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
+const ALLOWED_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'application/pdf',
+]
 
 /**
  * Faz upload de um comprovante para o Storage do Supabase
@@ -54,7 +59,7 @@ export async function uploadReceipt(
     // Fazer upload usando fetch diretamente para o Supabase Storage
     const baseUrl = import.meta.env.VITE_SUPABASE_URL
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-    
+
     const uploadResponse = await fetch(
       `${baseUrl}/storage/v1/object/${RECEIPT_BUCKET}/${fileName}`,
       {
@@ -64,7 +69,7 @@ export async function uploadReceipt(
           Authorization: `Bearer ${token}`,
         },
         body: formData,
-      }
+      },
     )
 
     if (!uploadResponse.ok) {
@@ -122,7 +127,7 @@ export async function deleteReceipt(receiptUrl: string): Promise<boolean> {
     // Remover arquivo do storage usando fetch
     const baseUrl = import.meta.env.VITE_SUPABASE_URL
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-    
+
     const deleteResponse = await fetch(
       `${baseUrl}/storage/v1/object/${RECEIPT_BUCKET}/${filePath}`,
       {
@@ -131,7 +136,7 @@ export async function deleteReceipt(receiptUrl: string): Promise<boolean> {
           apikey: anonKey,
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
 
     if (!deleteResponse.ok) {
@@ -164,7 +169,7 @@ export async function listUserReceipts(userId: string) {
     // Listar arquivos do storage usando fetch
     const baseUrl = import.meta.env.VITE_SUPABASE_URL
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-    
+
     const listResponse = await fetch(
       `${baseUrl}/storage/v1/object/list/${RECEIPT_BUCKET}?prefix=receipts/${userId}&limit=100&offset=0&sortBy=created_at&order=desc`,
       {
@@ -173,7 +178,7 @@ export async function listUserReceipts(userId: string) {
           apikey: anonKey,
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
 
     if (!listResponse.ok) {
