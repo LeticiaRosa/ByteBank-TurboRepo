@@ -1,5 +1,4 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import DashboardLayout from '../components/DashboardLayout'
 import { AuthGuard } from '../components/AuthGuard'
@@ -12,7 +11,6 @@ export const Route = createRootRoute({
           <Outlet />
         </DashboardLayout>
       </AuthGuard>
-      <TanStackRouterDevtools />
     </>
   ),
 })

@@ -84,5 +84,8 @@ export { useAuthToast } from "./hooks/use-auth-toast.js";
 // Utils
 export { cn } from "./lib/utils.js";
 
+// Icons
+export { Eye, EyeOff } from "lucide-react";
+
 // Styles
 export type * from "./components/button.js";

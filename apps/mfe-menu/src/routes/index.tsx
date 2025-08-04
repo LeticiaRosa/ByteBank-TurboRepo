@@ -18,6 +18,7 @@ import {
   PieChart,
   Pie,
 } from 'recharts'
+import { AccountBalance } from '../components'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -94,15 +95,7 @@ function HomePage() {
       <h1 className="text-3xl font-bold text-foreground mb-6">Início</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {/* Card de Saldo */}
-        <div className="bg-card rounded-lg shadow-sm border-border border p-6">
-          <h3 className="text-lg font-semibold text-card-foreground mb-2">
-            Saldo Atual
-          </h3>
-          <p className="text-3xl font-bold text-primary">R$ 2.580,45</p>
-          <p className="text-sm text-muted-foreground mt-1">Conta Corrente</p>
-        </div>
-
+        <AccountBalance showeye={false} />
         {/* Card de Receitas */}
         <div className="bg-card rounded-lg shadow-sm border-border border p-6">
           <h3 className="text-lg font-semibold text-card-foreground mb-2">

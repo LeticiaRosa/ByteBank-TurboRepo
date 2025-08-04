@@ -12,6 +12,7 @@ import {
 } from '@bytebank/ui'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ThemeProvider } from '../hooks/useTheme'
+import { AccountBalance } from './AccountBalance'
 
 const menuItems = [
   {
@@ -125,26 +126,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </span>
               </div>
             </SidebarHeader>
-            <SidebarContent className="bg-sidebar">
-              <SidebarMenu className="p-2">
-                {menuItems.map((item) => {
-                  const isActive = currentPathWithoutBase === item.path
 
-                  return (
-                    <SidebarMenuItem key={item.path}>
-                      <SidebarMenuButton asChild isActive={isActive}>
-                        <Link
-                          to={item.path}
-                          className="flex items-center gap-3 px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
-                        >
-                          {item.icon}
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                })}
-              </SidebarMenu>
+            <SidebarContent className="flex bg-sidebar justify-between">
+              <div>
+                <SidebarMenu className="p-2">
+                  {menuItems.map((item) => {
+                    const isActive = currentPathWithoutBase === item.path
+
+                    return (
+                      <SidebarMenuItem key={item.path}>
+                        <SidebarMenuButton asChild isActive={isActive}>
+                          <Link
+                            to={item.path}
+                            className="flex items-center gap-3 px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
+                          >
+                            {item.icon}
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
+                </SidebarMenu>
+              </div>
+              <div>
+                <AccountBalance />
+              </div>
             </SidebarContent>
           </Sidebar>
           <SidebarInset className="flex-1">
@@ -155,6 +162,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </SidebarInset>
         </div>
       </SidebarProvider>
+
       <Toaster />
     </ThemeProvider>
   )

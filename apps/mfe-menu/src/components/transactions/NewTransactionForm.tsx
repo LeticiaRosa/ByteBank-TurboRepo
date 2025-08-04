@@ -363,22 +363,6 @@ export function NewTransactionForm({
           )}
         </div>
 
-        {/* Informações da conta */}
-        {primaryAccount && (
-          <div className="bg-muted/50 p-3 rounded-md">
-            <p className="text-sm text-muted-foreground">
-              <strong>Conta de origem:</strong> {primaryAccount.account_number}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              <strong>Saldo disponível:</strong>{' '}
-              {primaryAccount.balance.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
-            </p>
-          </div>
-        )}
-
         <Button
           type="submit"
           disabled={isCreating || isUpdating}

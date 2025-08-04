@@ -1,3 +1,4 @@
+import { AccountBalance } from './AccountBalance'
 import { Logo } from './Logo'
 import { UserDropdown } from './UserDropdown'
 import { SidebarTrigger } from '@bytebank/ui'
@@ -21,13 +22,13 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className=" flex h-16 w-full items-center justify-between px-4">
         {/* Logo Section */}
+
         <div className="flex items-center gap-2">
           <SidebarTrigger />
           <Logo />
         </div>
 
-        {/* User Avatar with Dropdown */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <UserDropdown user={user} loading={loading} />
         </div>
       </div>
