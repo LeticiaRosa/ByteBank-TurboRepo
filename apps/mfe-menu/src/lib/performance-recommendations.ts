@@ -33,17 +33,17 @@ export const PERFORMANCE_TIPS = {
     staleTime: 5 * 60 * 1000, // 5 minutos para contas bancárias
     cacheTime: 10 * 60 * 1000, // 10 minutos
   },
-  
+
   // Limites de paginação
   PAGINATION_LIMITS: {
     DEFAULT_PAGE_SIZE: 10,
     MAX_PAGE_SIZE: 50,
     RECENT_TRANSACTIONS: 5,
   },
-  
+
   // Throttling para atualizações
   THROTTLE_TIMES: {
     SEARCH: 300, // ms
     AUTO_REFRESH: 30000, // 30s
-  }
+  },
 }

@@ -61,9 +61,9 @@ export function RecentTransactions({
         setAllTransactions(result.data)
       } else {
         // Páginas subsequentes - adiciona às transações existentes
-        setAllTransactions(prev => {
+        setAllTransactions((prev) => {
           const newTransactions = result.data.filter(
-            newTx => !prev.some(existingTx => existingTx.id === newTx.id)
+            (newTx) => !prev.some((existingTx) => existingTx.id === newTx.id),
           )
           return [...prev, ...newTransactions]
         })
@@ -81,12 +81,13 @@ export function RecentTransactions({
   }
 
   const handleLoadMoreTransactions = () => {
-    setCurrentPage(prev => prev + 1)
+    setCurrentPage((prev) => prev + 1)
   }
 
   // Verificar se há mais transações para carregar
-  const hasMoreTransactions = result?.pagination && 
-    result.pagination.total && 
+  const hasMoreTransactions =
+    result?.pagination &&
+    result.pagination.total &&
     currentPage < Math.ceil(result.pagination.total / 5)
 
   if (isLoadingTransactions) {
@@ -110,31 +111,32 @@ export function RecentTransactions({
         </h2>
 
         {/* Botão para reprocessar transações pendentes */}
-        {allTransactions && allTransactions.some((t: Transaction) => t.status === 'pending') && (
-          <Button
-            onClick={handleReprocessAllPending}
-            size="sm"
-            className="text-sm bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-md transition-colors"
-            title="Reprocessar transações pendentes"
-          >
-            Reprocessar Pendentes
-          </Button>
-        )}
+        {allTransactions &&
+          allTransactions.some((t: Transaction) => t.status === 'pending') && (
+            <Button
+              onClick={handleReprocessAllPending}
+              size="sm"
+              className="text-sm bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-md transition-colors"
+              title="Reprocessar transações pendentes"
+            >
+              Reprocessar Pendentes
+            </Button>
+          )}
       </div>
 
       {allTransactions && allTransactions.length > 0 ? (
         <div className="space-y-3">
           {allTransactions.map((transaction: Transaction) => (
-              <TransactionItem
-                key={transaction.id}
-                transaction={transaction}
-                primaryAccount={primaryAccount}
-                onProcessTransaction={onProcessTransaction}
-                onEditTransaction={onEditTransaction}
-                onDeleteTransaction={onDeleteTransaction}
-                onRefreshBankAccounts={onRefreshBankAccounts}
-              />
-            ))}
+            <TransactionItem
+              key={transaction.id}
+              transaction={transaction}
+              primaryAccount={primaryAccount}
+              onProcessTransaction={onProcessTransaction}
+              onEditTransaction={onEditTransaction}
+              onDeleteTransaction={onDeleteTransaction}
+              onRefreshBankAccounts={onRefreshBankAccounts}
+            />
+          ))}
         </div>
       ) : (
         <div className="text-center py-8">

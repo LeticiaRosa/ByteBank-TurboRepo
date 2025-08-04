@@ -42,7 +42,7 @@ export const QUERY_CONFIG = {
     refetchOnWindowFocus: false, // Evitar requisições desnecessárias no foco
   },
 
-  // Configurações para contas bancárias  
+  // Configurações para contas bancárias
   bankAccounts: {
     staleTime: 1000 * 30, // 30 segundos - saldos precisam ser relativamente atuais
     gcTime: 1000 * 60 * 5, // 5 minutos
