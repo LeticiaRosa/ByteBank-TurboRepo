@@ -222,3 +222,116 @@ export function validateReceiptFile(file: File): {
 
   return { isValid: true }
 }
+
+/**
+ * Upload genérico de arquivos para qualquer bucket do Supabase Storage
+ * @param file - Arquivo a ser enviado
+ * @param bucket - Nome do bucket
+ * @param path - Caminho do arquivo no bucket
+ * @returns URL pública do arquivo ou null em caso de erro
+ */
+export async function uploadFile(
+  file: File,
+  bucket: string,
+  path: string,
+): Promise<{ url: string | null; error: string | null }> {
+  try {
+    // Obter token de autenticação
+    const token = authService.getAuthToken()
+    if (!token) {
+      return {
+        url: null,
+        error: 'Token de autenticação não encontrado',
+      }
+    }
+
+    // Preparar FormData para upload
+    const formData = new FormData()
+    formData.append('file', file)
+
+    // Fazer upload usando fetch diretamente para o Supabase Storage
+    const baseUrl = import.meta.env.VITE_SUPABASE_URL
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+    const uploadResponse = await fetch(
+      `${baseUrl}/storage/v1/object/${bucket}/${path}`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: anonKey,
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      },
+    )
+
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text()
+      console.error('Erro no upload:', errorText)
+      return {
+        url: null,
+        error: `Erro no upload: ${uploadResponse.statusText}`,
+      }
+    }
+
+    // Construir URL pública do arquivo
+    const publicUrl = `${baseUrl}/storage/v1/object/public/${bucket}/${path}`
+
+    return {
+      url: publicUrl,
+      error: null,
+    }
+  } catch (error) {
+    console.error('Erro no upload do arquivo:', error)
+    return {
+      url: null,
+      error: 'Erro interno no upload do arquivo',
+    }
+  }
+}
+
+/**
+ * Remove um arquivo genérico do Storage do Supabase
+ * @param bucket - Nome do bucket
+ * @param path - Caminho do arquivo no bucket
+ * @returns true se removido com sucesso, false caso contrário
+ */
+export async function deleteFile(
+  bucket: string,
+  path: string,
+): Promise<boolean> {
+  try {
+    // Obter token de autenticação
+    const token = authService.getAuthToken()
+    if (!token) {
+      console.error('Token de autenticação não encontrado')
+      return false
+    }
+
+    // Remover arquivo do storage usando fetch
+    const baseUrl = import.meta.env.VITE_SUPABASE_URL
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+    const deleteResponse = await fetch(
+      `${baseUrl}/storage/v1/object/${bucket}/${path}`,
+      {
+        method: 'DELETE',
+        headers: {
+          apikey: anonKey,
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    if (!deleteResponse.ok) {
+      const errorText = await deleteResponse.text()
+      console.error('Erro ao remover arquivo:', errorText)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error('Erro ao processar remoção do arquivo:', error)
+    return false
+  }
+}

@@ -9,6 +9,8 @@ import {
   useToast,
 } from '@bytebank/ui'
 import { useTransactions, type Transaction } from '../hooks'
+import { useFilteredTransactions } from '../hooks/useFilteredTransactions'
+import { authService } from '../lib/auth'
 import { AccountInfos } from '../components'
 import {
   TransactionItem,
@@ -21,26 +23,34 @@ export const Route = createFileRoute('/extrato')({
 })
 
 function ExtractPage() {
-  const {
-    transactions,
-    isLoadingTransactions,
-    deleteTransaction,
-    processTransaction,
-  } = useTransactions()
+  const userId = authService.getCurrentUserId()
+  const { deleteTransaction, processTransaction } = useTransactions()
 
   const toast = useToast()
 
   const [filters, setFilters] = useState<FilterOptions>({
     dateFrom: '',
     dateTo: '',
-    transactionType: '',
-    status: '',
+    transactionType: 'all',
+    status: 'all',
     minAmount: '',
     maxAmount: '',
     description: '',
-    category: '',
+    category: 'all',
     senderName: '',
   })
+
+  // Usar o hook para buscar transações filtradas com paginação
+  const { data: result, isLoading: isLoadingTransactions } =
+    useFilteredTransactions(filters, userId || '', { page: 1, pageSize: 10 })
+
+  /*Corrigindo o valor de amount de centavos para reais*/
+  const filteredTransactions = result?.data
+    ? result.data.map((transaction) => ({
+        ...transaction,
+        amount: transaction.amount / 100, // Convertendo de centavos para reais
+      }))
+    : []
 
   // Funções de callback para o menu de ações
   const handleEditTransaction = async (transaction: Transaction) => {
@@ -84,99 +94,6 @@ function ExtractPage() {
     }
   }
 
-  // Função para criar data sem problemas de fuso horário
-  const parseDate = (dateString: string): Date | null => {
-    try {
-      const [year, month, day] = dateString.split('-').map(Number)
-      if (year && month && day) {
-        return new Date(year, month - 1, day) // month is 0-indexed
-      }
-    } catch {
-      // fallback
-    }
-    return null
-  }
-
-  // Filtrar transações baseado nos filtros aplicados
-  const filteredTransactions = useMemo(() => {
-    if (!transactions) return []
-
-    return transactions.filter((transaction) => {
-      // Filtro por data
-      if (filters.dateFrom) {
-        const transactionDate = new Date(transaction.created_at)
-        const fromDate = parseDate(filters.dateFrom)
-        if (!fromDate || transactionDate < fromDate) return false
-      }
-
-      if (filters.dateTo) {
-        const transactionDate = new Date(transaction.created_at)
-        const toDate = parseDate(filters.dateTo)
-        if (toDate) {
-          toDate.setHours(23, 59, 59, 999) // Final do dia no fuso horário local
-          console.log('Transaction Date:', transaction.created_at)
-          console.log('To Date:', toDate.toISOString())
-          if (transactionDate > toDate) return false
-        }
-      }
-
-      // Filtro por tipo
-      if (
-        filters.transactionType !== 'all' &&
-        filters.transactionType &&
-        transaction.transaction_type !== filters.transactionType
-      ) {
-        return false
-      }
-
-      // Filtro por status
-      if (
-        filters.status !== 'all' &&
-        filters.status &&
-        transaction.status !== filters.status
-      ) {
-        return false
-      }
-
-      // Filtro por valor mínimo
-      if (filters.minAmount) {
-        const minAmount = parseFloat(filters.minAmount)
-        if (transaction.amount < minAmount) return false
-      }
-
-      // Filtro por valor máximo
-      if (filters.maxAmount) {
-        const maxAmount = parseFloat(filters.maxAmount)
-        if (transaction.amount > maxAmount) return false
-      }
-
-      // Filtro por descrição
-      if (filters.description) {
-        const description = transaction.description?.toLowerCase() || ''
-        const filterDescription = filters.description.toLowerCase()
-        if (!description.includes(filterDescription)) return false
-      }
-
-      // Filtro por categoria
-      if (
-        filters.category !== 'all' &&
-        filters.category &&
-        transaction.category !== filters.category
-      ) {
-        return false
-      }
-
-      // Filtro por remetente
-      if (filters.senderName) {
-        const senderName = transaction.sender_name?.toLowerCase() || ''
-        const filterSenderName = filters.senderName.toLowerCase()
-        if (!senderName.includes(filterSenderName)) return false
-      }
-
-      return true
-    })
-  }, [transactions, filters])
-
   // Calcular estatísticas do período filtrado
   const periodStats = useMemo(() => {
     const totalTransactions = filteredTransactions.length
@@ -210,12 +127,12 @@ function ExtractPage() {
     setFilters({
       dateFrom: '',
       dateTo: '',
-      transactionType: '',
-      status: '',
+      transactionType: 'all',
+      status: 'all',
       minAmount: '',
       maxAmount: '',
       description: '',
-      category: '',
+      category: 'all',
       senderName: '',
     })
   }

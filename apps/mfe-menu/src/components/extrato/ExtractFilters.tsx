@@ -29,6 +29,42 @@ interface ExtractFiltersProps {
   onReset: () => void
 }
 
+// Exemplo de uso das funções de filtro com sintaxe similar ao Supabase:
+//
+// import { getFilteredTransactions, queryTransactions } from '../../lib/transactions'
+//
+// // 1. Usando getFilteredTransactions com os filtros do componente:
+// const transactions = await getFilteredTransactions(filters, userId)
+//
+// // 2. Usando queryTransactions para queries personalizadas (sintaxe similar ao Supabase):
+//
+// // Equivalente a: supabase.from('transactions').eq('category', 'alimentacao')
+// const foodTransactions = await queryTransactions(userId, {
+//   eq: { category: 'alimentacao' }
+// })
+//
+// // Equivalente a: supabase.from('transactions').eq('category', 'teste').gte('amount', 1000)
+// const testTransactions = await queryTransactions(userId, {
+//   eq: { category: 'teste' },
+//   gte: { amount: 1000 }
+// })
+//
+// // Query complexa - equivalente a:
+// // supabase.from('transactions')
+// //   .eq('category', 'alimentacao')
+// //   .eq('status', 'completed')
+// //   .gte('created_at', '2024-01-01T00:00:00.000Z')
+// //   .lte('created_at', '2024-12-31T23:59:59.999Z')
+// //   .ilike('description', '%mercado%')
+// //   .order('created_at', { ascending: false })
+// const complexQuery = await queryTransactions(userId, {
+//   eq: { category: 'alimentacao', status: 'completed' },
+//   gte: { created_at: '2024-01-01T00:00:00.000Z' },
+//   lte: { created_at: '2024-12-31T23:59:59.999Z' },
+//   ilike: { description: 'mercado' },
+//   order: { column: 'created_at', ascending: false }
+// })
+
 export function ExtractFilters({
   onFilterChange,
   onReset,

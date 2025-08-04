@@ -1,5 +1,6 @@
 import { httpClient } from './http-client'
 import { authService } from './auth'
+import type { FilterOptions } from '../components/extrato/ExtractFilters'
 
 // Funções utilitárias para conversão monetária
 export const MoneyUtils = {
@@ -97,6 +98,291 @@ export interface CreateTransactionData {
   receipt_file?: File // Arquivo de comprovante (opcional)
 }
 
+export interface PaginationOptions {
+  page?: number // Página atual (começa em 1)
+  pageSize?: number // Tamanho da página
+  from?: number // Índice inicial (usado com to)
+  to?: number // Índice final (usado com from)
+}
+
+export interface PaginatedResult<T> {
+  data: T[]
+  pagination: {
+    page: number
+    pageSize: number
+    total?: number
+    from: number
+    to: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
+}
+
+/**
+ * Busca transações com filtros aplicados e paginação
+ * @param filters - Objeto com filtros aplicados
+ * @param userId - ID do usuário para filtrar transações
+ * @param pagination - Opções de paginação
+ * @returns Lista de transações filtradas com informações de paginação
+ */
+export async function getFilteredTransactions(
+  filters: FilterOptions,
+  userId: string,
+  pagination?: PaginationOptions,
+): Promise<PaginatedResult<Transaction>> {
+  try {
+    // Configuração padrão de paginação
+    const defaultPageSize = 20
+    const page = pagination?.page ?? 1
+    const pageSize = pagination?.pageSize ?? defaultPageSize
+
+    // Calcular range baseado na página ou usar from/to fornecidos
+    let from: number, to: number
+    if (pagination?.from !== undefined && pagination?.to !== undefined) {
+      from = pagination.from
+      to = pagination.to
+    } else {
+      from = (page - 1) * pageSize
+      to = from + pageSize - 1
+    }
+
+    // Construir parâmetros de query baseados nos filtros
+    const params: Record<string, string> = {
+      user_id: `eq.${userId}`,
+      select: '*',
+    }
+
+    // Aplicar paginação usando limit e offset
+    // Equivalente a: .range(from, to) mas usando PostgREST limit/offset syntax
+    params['limit'] = pageSize.toString()
+    params['offset'] = from.toString()
+
+    // Filtro por período - usar and para combinar filtros de data
+    if (filters.dateFrom && filters.dateTo) {
+      params['created_at'] =
+        `gte.${filters.dateFrom}T00:00:00.000Z&created_at=lte.${filters.dateTo}T23:59:59.999Z`
+    } else if (filters.dateFrom) {
+      params['created_at'] = `gte.${filters.dateFrom}T00:00:00.000Z`
+    } else if (filters.dateTo) {
+      params['created_at'] = `lte.${filters.dateTo}T23:59:59.999Z`
+    }
+
+    // Filtro por tipo de transação
+    if (
+      filters.transactionType &&
+      filters.transactionType !== 'all' &&
+      filters.transactionType.trim() !== ''
+    ) {
+      params['transaction_type'] = `eq.${filters.transactionType}`
+    }
+
+    // Filtro por status
+    if (
+      filters.status &&
+      filters.status !== 'all' &&
+      filters.status.trim() !== ''
+    ) {
+      params['status'] = `eq.${filters.status}`
+    }
+
+    // Filtro por categoria
+    if (
+      filters.category &&
+      filters.category !== 'all' &&
+      filters.category.trim() !== ''
+    ) {
+      params['category'] = `eq.${filters.category}`
+    }
+
+    // Filtro por valor - usar and para combinar filtros de valor
+    if (
+      filters.minAmount &&
+      filters.minAmount.trim() !== '' &&
+      filters.maxAmount &&
+      filters.maxAmount.trim() !== ''
+    ) {
+      const minAmountCents = Math.round(parseFloat(filters.minAmount) * 100)
+      const maxAmountCents = Math.round(parseFloat(filters.maxAmount) * 100)
+      params['amount'] = `gte.${minAmountCents}&amount=lte.${maxAmountCents}`
+    } else if (filters.minAmount && filters.minAmount.trim() !== '') {
+      const minAmountCents = Math.round(parseFloat(filters.minAmount) * 100)
+      params['amount'] = `gte.${minAmountCents}`
+    } else if (filters.maxAmount && filters.maxAmount.trim() !== '') {
+      const maxAmountCents = Math.round(parseFloat(filters.maxAmount) * 100)
+      params['amount'] = `lte.${maxAmountCents}`
+    }
+
+    // Filtro por descrição (busca textual case-insensitive)
+    if (filters.description && filters.description.trim() !== '') {
+      params['description'] = `ilike.%${filters.description}%`
+    }
+
+    // Filtro por nome do remetente (busca textual case-insensitive)
+    if (filters.senderName && filters.senderName.trim() !== '') {
+      params['sender_name'] = `ilike.%${filters.senderName}%`
+    }
+
+    // Ordenar por data de criação (mais recente primeiro)
+    params['order'] = 'created_at.desc'
+
+    // Fazer a requisição usando o httpClient
+    const transactions = await httpClient.get<Transaction[]>(
+      '/transactions',
+      params,
+    )
+
+    // Para obter o total de registros, fazer uma query separada com count
+    // Reutilizar os mesmos filtros, mas sem paginação, ordem e select
+    const countParams = { ...params }
+    delete countParams['limit']
+    delete countParams['offset']
+    delete countParams['order']
+    delete countParams['select']
+    countParams['select'] = 'count'
+
+    let total: number | undefined
+    try {
+      const countResult = await httpClient.get<Array<{ count: number }>>(
+        '/transactions',
+        countParams,
+      )
+      total = countResult?.[0]?.count ?? 0
+    } catch (error) {
+      console.warn('Erro ao obter contagem total:', error)
+      // Se não conseguir obter o total, continue sem ele
+    }
+
+    // Preparar resultado paginado
+    const result: PaginatedResult<Transaction> = {
+      data: transactions || [],
+      pagination: {
+        page,
+        pageSize,
+        total,
+        from,
+        to: Math.min(to, from + (transactions?.length ?? 0) - 1),
+        hasNextPage: total
+          ? to < total - 1
+          : (transactions?.length ?? 0) === pageSize,
+        hasPreviousPage: from > 0,
+      },
+    }
+
+    return result
+  } catch (error) {
+    console.error('Erro ao buscar transações filtradas:', error)
+    throw new Error('Erro ao carregar transações')
+  }
+}
+
+/**
+ * Função auxiliar para construir query complexa usando sintaxe similar ao Supabase JS SDK
+ * Exemplo de uso equivalente ao:
+ * const { data, error } = await supabase
+ *   .from('transactions')
+ *   .select('*')
+ *   .eq('user_id', userId)
+ *   .gte('created_at', dateFrom)
+ *   .lte('created_at', dateTo)
+ *   .eq('category', 'alimentacao')
+ *   .range(0, 19) // Convertido para limit=20&offset=0
+ *   .order('created_at', { ascending: false })
+ */
+export async function queryTransactions(
+  userId: string,
+  options?: {
+    select?: string
+    eq?: Record<string, any>
+    gte?: Record<string, any>
+    lte?: Record<string, any>
+    like?: Record<string, string>
+    ilike?: Record<string, string>
+    order?: { column: string; ascending?: boolean }
+    limit?: number
+    range?: { from: number; to: number } // Paginação usando range
+  },
+): Promise<Transaction[]> {
+  try {
+    const params: Record<string, string> = {
+      user_id: `eq.${userId}`,
+    }
+
+    // Select fields
+    if (options?.select) {
+      params['select'] = options.select
+    } else {
+      params['select'] = '*'
+    }
+
+    // Equal filters
+    if (options?.eq) {
+      Object.entries(options.eq).forEach(([key, value]) => {
+        params[key] = `eq.${value}`
+      })
+    }
+
+    // Greater than or equal filters
+    if (options?.gte) {
+      Object.entries(options.gte).forEach(([key, value]) => {
+        params[key] = `gte.${value}`
+      })
+    }
+
+    // Less than or equal filters
+    if (options?.lte) {
+      Object.entries(options.lte).forEach(([key, value]) => {
+        if (params[key]) {
+          params[key] = `${params[key]}&${key}=lte.${value}`
+        } else {
+          params[key] = `lte.${value}`
+        }
+      })
+    }
+
+    // Like filters (case-sensitive)
+    if (options?.like) {
+      Object.entries(options.like).forEach(([key, value]) => {
+        params[key] = `like.%${value}%`
+      })
+    }
+
+    // iLike filters (case-insensitive)
+    if (options?.ilike) {
+      Object.entries(options.ilike).forEach(([key, value]) => {
+        params[key] = `ilike.%${value}%`
+      })
+    }
+
+    // Range (paginação) - tem precedência sobre limit
+    if (options?.range) {
+      const pageSize = options.range.to - options.range.from + 1
+      params['limit'] = pageSize.toString()
+      params['offset'] = options.range.from.toString()
+    } else if (options?.limit) {
+      // Limit - equivalente a .limit(n)
+      params['limit'] = options.limit.toString()
+    }
+
+    // Order
+    if (options?.order) {
+      const direction = options.order.ascending === false ? 'desc' : 'asc'
+      params['order'] = `${options.order.column}.${direction}`
+    } else {
+      // Default order by created_at desc
+      params['order'] = 'created_at.desc'
+    }
+
+    const transactions = await httpClient.get<Transaction[]>(
+      '/transactions',
+      params,
+    )
+    return transactions || []
+  } catch (error) {
+    console.error('Erro ao buscar transações:', error)
+    throw new Error('Erro ao carregar transações')
+  }
+}
+
 export interface BankAccount {
   id: string
   user_id: string
@@ -188,7 +474,7 @@ export class TransactionService {
     let finalTransaction = transaction
     if (receipt_file) {
       try {
-        const { uploadReceipt } = await import('./supabase')
+        const { uploadReceipt } = await import('./file-upload')
         const { url: receiptUrl, error: uploadError } = await uploadReceipt(
           receipt_file,
           transaction.id,
@@ -265,7 +551,7 @@ export class TransactionService {
     // Se há um arquivo de comprovante, fazer upload
     if (receipt_file) {
       try {
-        const { uploadReceipt } = await import('./supabase')
+        const { uploadReceipt } = await import('./file-upload')
         const { url: receiptUrl, error: uploadError } = await uploadReceipt(
           receipt_file,
           transactionId,
