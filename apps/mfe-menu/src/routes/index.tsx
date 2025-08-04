@@ -108,7 +108,7 @@ function HomePage() {
           title="Saldo Principal"
           text="Conta Corrente"
           isLoadingAccounts={isLoadingAccounts}
-          amount={primaryAccount?.balance as number}
+          amount={(primaryAccount?.balance as number) || 0}
           showeye={false}
         />
 

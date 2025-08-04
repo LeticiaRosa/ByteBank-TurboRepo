@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useToast, Button } from '@bytebank/ui'
+import { useToast, Button, Input } from '@bytebank/ui'
 import {
   type CreateTransactionData,
   type BankAccount,
@@ -301,7 +301,7 @@ export function NewTransactionForm({
           <label className="block text-sm font-medium text-card-foreground mb-1">
             Valor *
           </label>
-          <input
+          <Input
             type="text"
             value={formData.amount}
             onChange={(e) => handleAmountChange(e.target.value)}
@@ -321,7 +321,7 @@ export function NewTransactionForm({
             <label className="block text-sm font-medium text-card-foreground mb-1">
               Conta de Destino *
             </label>
-            <input
+            <Input
               type="text"
               value={formData.to_account_number || ''}
               onChange={(e) =>
@@ -347,7 +347,7 @@ export function NewTransactionForm({
           <label className="block text-sm font-medium text-card-foreground mb-1">
             Descrição *
           </label>
-          <input
+          <Input
             type="text"
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}

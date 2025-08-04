@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Input, Card, CardContent } from '@bytebank/ui'
+import { Button, Input, Card, CardContent, DatePicker } from '@bytebank/ui'
 
 export interface FilterOptions {
   dateFrom: string
@@ -133,31 +133,22 @@ export function ExtractFilters({
           {isExpanded && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t">
               {/* Período personalizado */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Data inicial
-                </label>
-                <Input
-                  type="date"
-                  value={filters.dateFrom}
-                  onChange={(e) =>
-                    handleFilterChange('dateFrom', e.target.value)
-                  }
-                  max={getToday()}
-                />
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Data final
-                </label>
-                <Input
-                  type="date"
-                  value={filters.dateTo}
-                  onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-                  max={getToday()}
-                />
-              </div>
+              <DatePicker
+                text="Data inicial"
+                value={filters.dateFrom}
+                onChange={(value) => handleFilterChange('dateFrom', value)}
+                placeholder="Selecionar data inicial"
+                max={getToday()}
+              />
+
+              <DatePicker
+                text="Data final"
+                value={filters.dateTo}
+                onChange={(value) => handleFilterChange('dateTo', value)}
+                placeholder="Selecionar data final"
+                max={getToday()}
+              />
 
               {/* Tipo de transação */}
               <div className="space-y-2">

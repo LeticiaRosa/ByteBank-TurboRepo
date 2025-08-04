@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Card, CardContent } from '@bytebank/ui'
 import { type Transaction } from '../../hooks'
 

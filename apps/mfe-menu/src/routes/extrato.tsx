@@ -82,6 +82,19 @@ function ExtractPage() {
     }
   }
 
+  // Função para criar data sem problemas de fuso horário
+  const parseDate = (dateString: string): Date | null => {
+    try {
+      const [year, month, day] = dateString.split('-').map(Number)
+      if (year && month && day) {
+        return new Date(year, month - 1, day) // month is 0-indexed
+      }
+    } catch {
+      // fallback
+    }
+    return null
+  }
+
   // Filtrar transações baseado nos filtros aplicados
   const filteredTransactions = useMemo(() => {
     if (!transactions) return []
@@ -90,15 +103,19 @@ function ExtractPage() {
       // Filtro por data
       if (filters.dateFrom) {
         const transactionDate = new Date(transaction.created_at)
-        const fromDate = new Date(filters.dateFrom)
-        if (transactionDate < fromDate) return false
+        const fromDate = parseDate(filters.dateFrom)
+        if (!fromDate || transactionDate < fromDate) return false
       }
 
       if (filters.dateTo) {
         const transactionDate = new Date(transaction.created_at)
-        const toDate = new Date(filters.dateTo)
-        toDate.setHours(23, 59, 59, 999) // Incluir o dia todo
-        if (transactionDate > toDate) return false
+        const toDate = parseDate(filters.dateTo)
+        if (toDate) {
+          toDate.setHours(23, 59, 59, 999) // Final do dia no fuso horário local
+          console.log('Transaction Date:', transaction.created_at)
+          console.log('To Date:', toDate.toISOString())
+          if (transactionDate > toDate) return false
+        }
       }
 
       // Filtro por tipo

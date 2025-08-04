@@ -1,4 +1,5 @@
 // Components
+export { DatePicker } from "./components/datepiker.js";
 export { Button, buttonVariants } from "./components/button.js";
 export { Input } from "./components/input.js";
 export { Label } from "./components/label.js";
