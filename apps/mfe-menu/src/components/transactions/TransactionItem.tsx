@@ -134,6 +134,23 @@ export function TransactionItem({
     }
   }
 
+  const getCategoryLabel = (category: string) => {
+    const categories = {
+      alimentacao: 'Alimentação',
+      transporte: 'Transporte',
+      saude: 'Saúde',
+      educacao: 'Educação',
+      entretenimento: 'Entretenimento',
+      compras: 'Compras',
+      casa: 'Casa',
+      trabalho: 'Trabalho',
+      investimentos: 'Investimentos',
+      viagem: 'Viagem',
+      outros: 'Outros',
+    }
+    return categories[category as keyof typeof categories] || category
+  }
+
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       pending: {
@@ -223,6 +240,11 @@ export function TransactionItem({
               )}
             </p>
 
+            {/* Badge de categoria */}
+            <span className="text-xs px-2 py-1 rounded-full font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+              {getCategoryLabel(transaction.category)}
+            </span>
+
             {/* Badge de status */}
             {getStatusBadge(transaction.status)}
 
@@ -238,6 +260,12 @@ export function TransactionItem({
           <p className="text-sm text-muted-foreground">
             {transaction.description}
           </p>
+          {transaction.sender_name && (
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium">Remetente:</span>{' '}
+              {transaction.sender_name}
+            </p>
+          )}
           <p className="text-sm text-muted-foreground">
             {new Date(transaction.created_at).toLocaleDateString('pt-BR', {
               day: '2-digit',

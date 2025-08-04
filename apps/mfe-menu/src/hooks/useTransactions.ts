@@ -15,6 +15,9 @@ import {
 import { transactionService } from '../lib/transactions'
 import { useToast } from '@bytebank/ui'
 
+// Re-export tipos
+export type { TransactionCategory } from '../lib/transactions'
+
 // Interface do hook principal - combinando responsabilidades relacionadas
 export interface UseTransactionsReturn {
   // Dados de transações

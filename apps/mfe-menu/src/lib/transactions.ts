@@ -52,6 +52,19 @@ export const MoneyUtils = {
 }
 
 // Tipos de dados
+export type TransactionCategory =
+  | 'alimentacao'
+  | 'transporte'
+  | 'saude'
+  | 'educacao'
+  | 'entretenimento'
+  | 'compras'
+  | 'casa'
+  | 'trabalho'
+  | 'investimentos'
+  | 'viagem'
+  | 'outros'
+
 export interface Transaction {
   id: string
   from_account_id?: string
@@ -67,6 +80,8 @@ export interface Transaction {
   created_at: string
   updated_at: string
   metadata?: any
+  category: TransactionCategory
+  sender_name?: string
 }
 
 export interface CreateTransactionData {
@@ -76,6 +91,8 @@ export interface CreateTransactionData {
   amount: number // Valor em centavos (ex: 2500 = R$ 25,00)
   description?: string
   metadata?: any
+  category?: TransactionCategory
+  sender_name?: string
 }
 
 export interface BankAccount {

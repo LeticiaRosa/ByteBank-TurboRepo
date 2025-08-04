@@ -6,6 +6,7 @@ export {
   useTransaction,
   type Transaction,
   type CreateTransactionData,
+  type TransactionCategory,
   type BankAccount,
 } from './useTransactions'
 

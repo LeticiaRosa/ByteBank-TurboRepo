@@ -38,6 +38,8 @@ function ExtractPage() {
     minAmount: '',
     maxAmount: '',
     description: '',
+    category: '',
+    senderName: '',
   })
 
   // Funções de callback para o menu de ações
@@ -150,6 +152,18 @@ function ExtractPage() {
         if (!description.includes(filterDescription)) return false
       }
 
+      // Filtro por categoria
+      if (filters.category && transaction.category !== filters.category) {
+        return false
+      }
+
+      // Filtro por remetente
+      if (filters.senderName) {
+        const senderName = transaction.sender_name?.toLowerCase() || ''
+        const filterSenderName = filters.senderName.toLowerCase()
+        if (!senderName.includes(filterSenderName)) return false
+      }
+
       return true
     })
   }, [transactions, filters])
@@ -192,6 +206,8 @@ function ExtractPage() {
       minAmount: '',
       maxAmount: '',
       description: '',
+      category: '',
+      senderName: '',
     })
   }
 

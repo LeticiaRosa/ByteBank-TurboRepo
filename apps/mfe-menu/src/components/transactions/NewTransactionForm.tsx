@@ -13,6 +13,7 @@ import {
   type CreateTransactionData,
   type BankAccount,
   type Transaction,
+  type TransactionCategory,
 } from '../../hooks'
 import { MoneyUtils } from '../../lib/transactions'
 
@@ -21,6 +22,8 @@ interface TransactionFormData {
   amount: string
   description: string
   to_account_number?: string
+  category: TransactionCategory
+  sender_name: string
 }
 
 interface NewTransactionFormProps {
@@ -72,6 +75,8 @@ export function NewTransactionForm({
         }),
         description: editingTransaction.description || '',
         to_account_number: toAccount?.account_number || '',
+        category: editingTransaction.category || 'outros',
+        sender_name: editingTransaction.sender_name || '',
       }
     }
 
@@ -80,6 +85,8 @@ export function NewTransactionForm({
       amount: '',
       description: '',
       to_account_number: '',
+      category: 'outros',
+      sender_name: '',
     }
   }
 
@@ -185,6 +192,8 @@ export function NewTransactionForm({
         amount, // Valor em reais - será convertido para centavos no service
         description: formData.description,
         from_account_id: primaryAccount.id,
+        category: formData.category,
+        sender_name: formData.sender_name.trim() || undefined,
       }
 
       // Para transferências, buscar conta de destino
@@ -221,6 +230,8 @@ export function NewTransactionForm({
           amount: '',
           description: '',
           to_account_number: '',
+          category: 'outros',
+          sender_name: '',
         })
         setErrors({})
       }
@@ -344,6 +355,50 @@ export function NewTransactionForm({
             )}
           </div>
         )}
+
+        {/* Categoria */}
+        <div>
+          <label className="block text-sm font-medium text-card-foreground mb-1">
+            Categoria *
+          </label>
+          <Select
+            value={formData.category}
+            onValueChange={(value) =>
+              handleInputChange('category', value as TransactionCategory)
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecione a categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="alimentacao">Alimentação</SelectItem>
+              <SelectItem value="transporte">Transporte</SelectItem>
+              <SelectItem value="saude">Saúde</SelectItem>
+              <SelectItem value="educacao">Educação</SelectItem>
+              <SelectItem value="entretenimento">Entretenimento</SelectItem>
+              <SelectItem value="compras">Compras</SelectItem>
+              <SelectItem value="casa">Casa</SelectItem>
+              <SelectItem value="trabalho">Trabalho</SelectItem>
+              <SelectItem value="investimentos">Investimentos</SelectItem>
+              <SelectItem value="viagem">Viagem</SelectItem>
+              <SelectItem value="outros">Outros</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Remetente/Pagador */}
+        <div>
+          <label className="block text-sm font-medium text-card-foreground mb-1">
+            Remetente/Pagador
+          </label>
+          <Input
+            type="text"
+            value={formData.sender_name}
+            onChange={(e) => handleInputChange('sender_name', e.target.value)}
+            placeholder="Nome do remetente ou pagador (opcional)"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring border-border"
+          />
+        </div>
 
         {/* Descrição */}
         <div>

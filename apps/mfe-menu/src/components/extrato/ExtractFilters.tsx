@@ -20,6 +20,8 @@ export interface FilterOptions {
   minAmount: string
   maxAmount: string
   description: string
+  category: string
+  senderName: string
 }
 
 interface ExtractFiltersProps {
@@ -39,6 +41,8 @@ export function ExtractFilters({
     minAmount: '',
     maxAmount: '',
     description: '',
+    category: '',
+    senderName: '',
   })
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -58,6 +62,8 @@ export function ExtractFilters({
       minAmount: '',
       maxAmount: '',
       description: '',
+      category: '',
+      senderName: '',
     }
     setFilters(resetFilters)
     onReset()
@@ -142,7 +148,7 @@ export function ExtractFilters({
 
           {/* Filtros expandidos */}
           {isExpanded && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t">
               {/* Período personalizado */}
 
               <DatePicker
@@ -206,6 +212,52 @@ export function ExtractFilters({
                     <SelectItem value="cancelled">Cancelada</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Categoria */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  Categoria
+                </label>
+                <Select
+                  value={filters.category || undefined}
+                  onValueChange={(value) =>
+                    handleFilterChange('category', value || '')
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todas as categorias" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="alimentacao">Alimentação</SelectItem>
+                    <SelectItem value="transporte">Transporte</SelectItem>
+                    <SelectItem value="saude">Saúde</SelectItem>
+                    <SelectItem value="educacao">Educação</SelectItem>
+                    <SelectItem value="entretenimento">
+                      Entretenimento
+                    </SelectItem>
+                    <SelectItem value="compras">Compras</SelectItem>
+                    <SelectItem value="casa">Casa</SelectItem>
+                    <SelectItem value="trabalho">Trabalho</SelectItem>
+                    <SelectItem value="investimentos">Investimentos</SelectItem>
+                    <SelectItem value="viagem">Viagem</SelectItem>
+                    <SelectItem value="outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Remetente */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  Remetente
+                </label>
+                <Input
+                  placeholder="Nome do remetente..."
+                  value={filters.senderName}
+                  onChange={(e) =>
+                    handleFilterChange('senderName', e.target.value)
+                  }
+                />
               </div>
 
               {/* Valor mínimo */}

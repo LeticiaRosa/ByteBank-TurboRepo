@@ -37,6 +37,23 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
     return types[type as keyof typeof types] || type
   }
 
+  const getCategoryLabel = (category: string) => {
+    const categories = {
+      alimentacao: 'Alimentação',
+      transporte: 'Transporte',
+      saude: 'Saúde',
+      educacao: 'Educação',
+      entretenimento: 'Entretenimento',
+      compras: 'Compras',
+      casa: 'Casa',
+      trabalho: 'Trabalho',
+      investimentos: 'Investimentos',
+      viagem: 'Viagem',
+      outros: 'Outros',
+    }
+    return categories[category as keyof typeof categories] || category
+  }
+
   const getTransactionTypeColor = (type: string) => {
     switch (type) {
       case 'deposit':
@@ -162,6 +179,11 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
                   {getTransactionTypeLabel(transaction.transaction_type)}
                 </span>
                 <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200`}
+                >
+                  {getCategoryLabel(transaction.category)}
+                </span>
+                <span
                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(transaction.status)}`}
                 >
                   {transaction.status === 'completed' && 'Concluída'}
@@ -174,6 +196,13 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
               <h3 className="font-medium text-foreground">
                 {transaction.description || 'Sem descrição'}
               </h3>
+
+              {transaction.sender_name && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium">Remetente:</span>{' '}
+                  {transaction.sender_name}
+                </p>
+              )}
 
               <p className="text-sm text-muted-foreground">
                 {formatDate(transaction.created_at)}
