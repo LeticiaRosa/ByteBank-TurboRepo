@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from 'auth/useAuth'
 import { useToast } from '@bytebank/ui'
+import { getAuthUrl } from '../lib/config'
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -31,7 +32,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
         // Redireciona para a tela de login após mostrar o toast
         setTimeout(() => {
-          window.location.href = 'http://localhost:3001'
+          window.location.href = getAuthUrl()
         }, 1000)
       }
     }
@@ -118,7 +119,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     if (!isRedirecting) {
       setIsRedirecting(true)
       setTimeout(() => {
-        window.location.href = 'http://localhost:3001'
+        window.location.href = getAuthUrl()
       }, 500)
     }
 

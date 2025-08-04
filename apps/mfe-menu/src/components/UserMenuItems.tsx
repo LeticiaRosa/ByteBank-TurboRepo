@@ -1,6 +1,7 @@
 import { DropdownMenuItem, DropdownMenuSeparator, useToast } from '@bytebank/ui'
 import { ThemeToggle } from './ThemeToggle'
 import { useAuth } from 'auth/useAuth'
+import { getAuthUrl } from '../lib/config'
 
 export const UserMenuItems = () => {
   const { signOut } = useAuth()
@@ -16,7 +17,7 @@ export const UserMenuItems = () => {
         })
         // onSignOut()
         // Redireciona para a tela de login
-        window.location.href = 'http://localhost:3001'
+        window.location.href = getAuthUrl()
       } else {
         toast.error('Erro ao fazer logout', {
           description: result.error?.message || 'Ocorreu um erro inesperado.',
