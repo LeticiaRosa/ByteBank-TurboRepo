@@ -88,6 +88,7 @@ export {
   ChartLegendContent,
   type ChartConfig,
 } from "./components/chart.js";
+export { FileUpload } from "./components/file-upload.js";
 
 // Hooks
 export { useToast } from "./hooks/use-toast.js";
@@ -98,7 +99,7 @@ export { useAuthToast } from "./hooks/use-auth-toast.js";
 export { cn } from "./lib/utils.js";
 
 // Icons
-export { Eye, EyeOff } from "lucide-react";
+export { Eye, EyeOff, Upload, File, X } from "lucide-react";
 
 // Styles
 export type * from "./components/button.js";

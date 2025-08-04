@@ -8,6 +8,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  FileUpload,
 } from '@bytebank/ui'
 import {
   type CreateTransactionData,
@@ -24,6 +25,7 @@ interface TransactionFormData {
   to_account_number?: string
   category: TransactionCategory
   sender_name: string
+  receipt_file?: File | null
 }
 
 interface NewTransactionFormProps {
@@ -77,6 +79,7 @@ export function NewTransactionForm({
         to_account_number: toAccount?.account_number || '',
         category: editingTransaction.category || 'outros',
         sender_name: editingTransaction.sender_name || '',
+        receipt_file: null, // No edit mode, no file is selected initially
       }
     }
 
@@ -87,6 +90,7 @@ export function NewTransactionForm({
       to_account_number: '',
       category: 'outros',
       sender_name: '',
+      receipt_file: null,
     }
   }
 
@@ -194,6 +198,7 @@ export function NewTransactionForm({
         from_account_id: primaryAccount.id,
         category: formData.category,
         sender_name: formData.sender_name.trim() || undefined,
+        receipt_file: formData.receipt_file || undefined, // Incluir arquivo se selecionado
       }
 
       // Para transferências, buscar conta de destino
@@ -232,6 +237,7 @@ export function NewTransactionForm({
           to_account_number: '',
           category: 'outros',
           sender_name: '',
+          receipt_file: null,
         })
         setErrors({})
       }
@@ -251,6 +257,11 @@ export function NewTransactionForm({
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }))
     }
+  }
+
+  // Função para lidar com seleção de arquivo
+  const handleFileSelect = (file: File | null) => {
+    setFormData((prev) => ({ ...prev, receipt_file: file }))
   }
 
   return (
@@ -419,6 +430,25 @@ export function NewTransactionForm({
               {errors.description}
             </p>
           )}
+        </div>
+
+        {/* Comprovante de Pagamento */}
+        <div>
+          <label className="block text-sm font-medium text-card-foreground mb-1">
+            Comprovante de Pagamento
+          </label>
+          <FileUpload
+            onFileSelect={handleFileSelect}
+            value={formData.receipt_file}
+            acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+            maxSize={5}
+            placeholder="Selecione o comprovante de pagamento (opcional)"
+            disabled={isCreating || isUpdating}
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Anexe uma foto ou PDF do comprovante para facilitar o controle das
+            suas transações
+          </p>
         </div>
 
         <Button

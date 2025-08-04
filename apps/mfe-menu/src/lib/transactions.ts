@@ -82,6 +82,7 @@ export interface Transaction {
   metadata?: any
   category: TransactionCategory
   sender_name?: string
+  receipt_url?: string // URL do comprovante de pagamento
 }
 
 export interface CreateTransactionData {
@@ -93,6 +94,7 @@ export interface CreateTransactionData {
   metadata?: any
   category?: TransactionCategory
   sender_name?: string
+  receipt_file?: File // Arquivo de comprovante (opcional)
 }
 
 export interface BankAccount {
@@ -160,15 +162,20 @@ export class TransactionService {
     if (!userId) {
       throw new Error('Usuário não autenticado')
     }
+
+    // Extrair arquivo de comprovante dos dados
+    const { receipt_file, ...transactionPayload } = data
+
     // Converter valor de reais para centavos antes de salvar
     const transactionData = {
-      ...data,
+      ...transactionPayload,
       amount: MoneyUtils.reaisToCents(data.amount), // Converter para centavos
       user_id: userId,
       currency: 'BRL',
       status: 'completed' as const, // Transações são criadas como completed automaticamente
     }
 
+    // Criar a transação primeiro
     const transaction = await httpClient.post<Transaction>(
       '/transactions',
       transactionData,
@@ -177,10 +184,43 @@ export class TransactionService {
       },
     )
 
+    // Se há um arquivo de comprovante, fazer upload
+    let finalTransaction = transaction
+    if (receipt_file) {
+      try {
+        const { uploadReceipt } = await import('./supabase')
+        const { url: receiptUrl, error: uploadError } = await uploadReceipt(
+          receipt_file,
+          transaction.id,
+          userId,
+        )
+
+        if (uploadError) {
+          console.error('Erro no upload do comprovante:', uploadError)
+          // Não falhar a transação por erro no upload, apenas log
+        } else if (receiptUrl) {
+          // Atualizar a transação com a URL do comprovante
+          const updatedTransaction = await httpClient.patch<Transaction>(
+            `/transactions?id=eq.${transaction.id}`,
+            { receipt_url: receiptUrl },
+            {
+              returnRepresentation: true,
+            },
+          )
+          finalTransaction = Array.isArray(updatedTransaction)
+            ? updatedTransaction[0]
+            : updatedTransaction
+        }
+      } catch (uploadError) {
+        console.error('Erro no processo de upload:', uploadError)
+        // Não falhar a transação por erro no upload
+      }
+    }
+
     // Converter valor de volta para reais na resposta
     return {
-      ...transaction,
-      amount: MoneyUtils.centsToReais(transaction.amount),
+      ...finalTransaction,
+      amount: MoneyUtils.centsToReais(finalTransaction.amount),
     }
   }
 
@@ -198,28 +238,66 @@ export class TransactionService {
       throw new Error('Usuário não autenticado')
     }
 
+    // Extrair arquivo de comprovante dos dados
+    const { receipt_file, ...transactionPayload } = data
+
     // Preparar dados para atualização
-    const updateData: any = { ...data }
+    const updateData: any = { ...transactionPayload }
 
     // Converter valor para centavos se fornecido
     if (data.amount !== undefined) {
       updateData.amount = MoneyUtils.reaisToCents(data.amount)
     }
 
+    // Atualizar a transação primeiro
     const transaction = await httpClient.patch<Transaction>(
       `/transactions?id=eq.${transactionId}&user_id=eq.${userId}`,
       updateData,
-      { returnRepresentation: true },
+      {
+        returnRepresentation: true,
+      },
     )
 
-    if (!transaction) {
-      throw new Error('Falha ao atualizar transação - resposta vazia')
+    let finalTransaction = Array.isArray(transaction)
+      ? transaction[0]
+      : transaction
+
+    // Se há um arquivo de comprovante, fazer upload
+    if (receipt_file) {
+      try {
+        const { uploadReceipt } = await import('./supabase')
+        const { url: receiptUrl, error: uploadError } = await uploadReceipt(
+          receipt_file,
+          transactionId,
+          userId,
+        )
+
+        if (uploadError) {
+          console.error('Erro no upload do comprovante:', uploadError)
+          // Não falhar a atualização por erro no upload, apenas log
+        } else if (receiptUrl) {
+          // Atualizar a transação com a URL do comprovante
+          const updatedTransaction = await httpClient.patch<Transaction>(
+            `/transactions?id=eq.${transactionId}&user_id=eq.${userId}`,
+            { receipt_url: receiptUrl },
+            {
+              returnRepresentation: true,
+            },
+          )
+          finalTransaction = Array.isArray(updatedTransaction)
+            ? updatedTransaction[0]
+            : updatedTransaction
+        }
+      } catch (uploadError) {
+        console.error('Erro no processo de upload:', uploadError)
+        // Não falhar a atualização por erro no upload
+      }
     }
 
     // Converter valor de volta para reais na resposta
     return {
-      ...transaction,
-      amount: MoneyUtils.centsToReais(transaction.amount),
+      ...finalTransaction,
+      amount: MoneyUtils.centsToReais(finalTransaction.amount),
     }
   }
 

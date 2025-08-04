@@ -43,7 +43,7 @@ export function RecentTransactions({
     if (transactions) {
       const nextCount = visibleTransactionsCount + 5
       setVisibleTransactionsCount(
-        nextCount > transactions.length ? transactions.length : nextCount
+        nextCount > transactions.length ? transactions.length : nextCount,
       )
     }
   }
@@ -83,17 +83,19 @@ export function RecentTransactions({
 
       {transactions && transactions.length > 0 ? (
         <div className="space-y-3">
-          {transactions.slice(0, visibleTransactionsCount).map((transaction: Transaction) => (
-            <TransactionItem
-              key={transaction.id}
-              transaction={transaction}
-              primaryAccount={primaryAccount}
-              onProcessTransaction={onProcessTransaction}
-              onEditTransaction={onEditTransaction}
-              onDeleteTransaction={onDeleteTransaction}
-              onRefreshBankAccounts={onRefreshBankAccounts}
-            />
-          ))}
+          {transactions
+            .slice(0, visibleTransactionsCount)
+            .map((transaction: Transaction) => (
+              <TransactionItem
+                key={transaction.id}
+                transaction={transaction}
+                primaryAccount={primaryAccount}
+                onProcessTransaction={onProcessTransaction}
+                onEditTransaction={onEditTransaction}
+                onDeleteTransaction={onDeleteTransaction}
+                onRefreshBankAccounts={onRefreshBankAccounts}
+              />
+            ))}
         </div>
       ) : (
         <div className="text-center py-8">
@@ -125,7 +127,8 @@ export function RecentTransactions({
           className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm"
           onClick={handleViewAllTransactions}
         >
-          Carregar mais transações ({transactions.length - visibleTransactionsCount} restantes)
+          Carregar mais transações (
+          {transactions.length - visibleTransactionsCount} restantes)
         </Button>
       )}
     </div>

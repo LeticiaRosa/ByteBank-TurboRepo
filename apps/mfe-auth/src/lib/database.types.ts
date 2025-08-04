@@ -108,6 +108,7 @@ export type Database = {
       transactions: {
         Row: {
           amount: number
+          category: Database['public']['Enums']['transaction_category'] | null
           created_at: string | null
           currency: string | null
           description: string | null
@@ -115,7 +116,9 @@ export type Database = {
           id: string
           metadata: Json | null
           processed_at: string | null
+          receipt_url: string | null
           reference_number: string | null
+          sender_name: string | null
           status: Database['public']['Enums']['transaction_status'] | null
           to_account_id: string | null
           transaction_type: Database['public']['Enums']['transaction_type']
@@ -124,6 +127,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          category?: Database['public']['Enums']['transaction_category'] | null
           created_at?: string | null
           currency?: string | null
           description?: string | null
@@ -131,7 +135,9 @@ export type Database = {
           id?: string
           metadata?: Json | null
           processed_at?: string | null
+          receipt_url?: string | null
           reference_number?: string | null
+          sender_name?: string | null
           status?: Database['public']['Enums']['transaction_status'] | null
           to_account_id?: string | null
           transaction_type: Database['public']['Enums']['transaction_type']
@@ -140,6 +146,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          category?: Database['public']['Enums']['transaction_category'] | null
           created_at?: string | null
           currency?: string | null
           description?: string | null
@@ -147,7 +154,9 @@ export type Database = {
           id?: string
           metadata?: Json | null
           processed_at?: string | null
+          receipt_url?: string | null
           reference_number?: string | null
+          sender_name?: string | null
           status?: Database['public']['Enums']['transaction_status'] | null
           to_account_id?: string | null
           transaction_type?: Database['public']['Enums']['transaction_type']
@@ -294,6 +303,18 @@ export type Database = {
       }
     }
     Enums: {
+      transaction_category:
+        | 'alimentacao'
+        | 'transporte'
+        | 'saude'
+        | 'educacao'
+        | 'entretenimento'
+        | 'compras'
+        | 'casa'
+        | 'trabalho'
+        | 'investimentos'
+        | 'viagem'
+        | 'outros'
       transaction_status: 'pending' | 'completed' | 'failed' | 'cancelled'
       transaction_type:
         | 'deposit'
