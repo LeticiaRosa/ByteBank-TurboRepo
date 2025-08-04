@@ -1,6 +1,7 @@
 import { type Transaction, type BankAccount } from '../../hooks'
 import { TransactionItem } from './TransactionItem'
 import { Button } from '@bytebank/ui'
+import { useState } from 'react'
 
 interface RecentTransactionsProps {
   transactions: Transaction[] | undefined
@@ -27,6 +28,8 @@ export function RecentTransactions({
   onReprocessPendingTransactions,
   onRefreshBankAccounts,
 }: RecentTransactionsProps) {
+  const [visibleTransactionsCount, setVisibleTransactionsCount] = useState(5)
+
   const handleReprocessAllPending = async () => {
     await onReprocessPendingTransactions()
     // Atualizar saldo imediatamente após reprocessar todas as transações
@@ -37,8 +40,12 @@ export function RecentTransactions({
   }
 
   const handleViewAllTransactions = () => {
-    // Aqui você pode implementar navegação para uma página completa de transações
-    console.log('Ver todas as transações')
+    if (transactions) {
+      const nextCount = visibleTransactionsCount + 5
+      setVisibleTransactionsCount(
+        nextCount > transactions.length ? transactions.length : nextCount
+      )
+    }
   }
 
   if (isLoadingTransactions) {
@@ -76,7 +83,7 @@ export function RecentTransactions({
 
       {transactions && transactions.length > 0 ? (
         <div className="space-y-3">
-          {transactions.slice(0, 5).map((transaction: Transaction) => (
+          {transactions.slice(0, visibleTransactionsCount).map((transaction: Transaction) => (
             <TransactionItem
               key={transaction.id}
               transaction={transaction}
@@ -112,13 +119,13 @@ export function RecentTransactions({
         </div>
       )}
 
-      {transactions && transactions.length > 5 && (
+      {transactions && transactions.length > visibleTransactionsCount && (
         <Button
           variant="ghost"
           className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm"
           onClick={handleViewAllTransactions}
         >
-          Ver todas as transações ({transactions.length})
+          Carregar mais transações ({transactions.length - visibleTransactionsCount} restantes)
         </Button>
       )}
     </div>
