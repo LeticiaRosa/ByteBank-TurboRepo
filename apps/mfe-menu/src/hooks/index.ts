@@ -26,3 +26,13 @@ export {
   useMonthlyFinancialSummary,
   type MonthlyFinancialSummary,
 } from './useMonthlyFinancialSummary'
+
+export {
+  useDashboardData,
+  useMonthlyBalanceData,
+  useExpensesByCategory,
+  useUserAccounts,
+  type MonthlyBalanceData,
+  type ExpensesCategoryData,
+  type UserAccountData,
+} from './useDashboardData'

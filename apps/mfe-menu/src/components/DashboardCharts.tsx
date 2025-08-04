@@ -17,33 +17,7 @@ import {
   PieChart,
   Pie,
 } from 'recharts'
-
-// Dados para os gráficos
-const monthlyBalanceData = [
-  { month: 'Jan', saldo: 2100, receitas: 2800, gastos: 1200 },
-  { month: 'Fev', saldo: 2300, receitas: 3000, gastos: 1300 },
-  { month: 'Mar', saldo: 2150, receitas: 2900, gastos: 1400 },
-  { month: 'Abr', saldo: 2450, receitas: 3100, gastos: 1350 },
-  { month: 'Mai', saldo: 2580, receitas: 3200, gastos: 1450 },
-]
-
-const expensesData = [
-  {
-    category: 'alimentacao',
-    label: 'Alimentação',
-    value: 450,
-    fill: 'var(--chart-1)',
-  },
-  {
-    category: 'transporte',
-    label: 'Transporte',
-    value: 320,
-    fill: 'var(--chart-2)',
-  },
-  { category: 'moradia', label: 'Moradia', value: 680, fill: 'var(--chart-3)' },
-  { category: 'lazer', label: 'Lazer', value: 180, fill: 'var(--chart-4)' },
-  { category: 'outros', label: 'Outros', value: 120, fill: 'var(--chart-5)' },
-]
+import { useDashboardData } from '../hooks'
 
 const chartConfig = {
   saldo: {
@@ -69,11 +43,11 @@ const expensesConfig = {
     label: 'Transporte',
     color: 'var(--chart-2)',
   },
-  moradia: {
+  casa: {
     label: 'Moradia',
     color: 'var(--chart-3)',
   },
-  lazer: {
+  entretenimento: {
     label: 'Lazer',
     color: 'var(--chart-4)',
   },
@@ -81,9 +55,87 @@ const expensesConfig = {
     label: 'Outros',
     color: 'var(--chart-5)',
   },
+  viagem: {
+    label: 'Viagem',
+    color: 'var(--chart-6)',
+  },
+  investimentos: {
+    label: 'Investimentos',
+    color: 'var(--chart-7)',
+  },
+  saude: {
+    label: 'Saúde',
+    color: 'var(--chart-8)',
+  },
+  educacao: {
+    label: 'Educação',
+    color: 'var(--chart-9)',
+  },
+  compras: {
+    label: 'Compras',
+    color: 'var(--chart-10)',
+  },
+  trabalho: {
+    label: 'Trabalho',
+    color: 'var(--chart-11)',
+  },
 } satisfies ChartConfig
 
+// Helper para converter centavos para reais
+const formatCurrency = (cents: number) => {
+  return (cents / 100).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+}
+
 export function DashboardCharts() {
+  const { monthlyBalanceData, expensesCategoryData, isLoading, hasError } =
+    useDashboardData()
+
+  // Preparar dados para os gráficos
+  const chartData = monthlyBalanceData.map((item) => ({
+    month: item.month_label,
+    saldo: item.saldo / 100, // Converter centavos para reais
+    receitas: item.receitas / 100,
+    gastos: item.gastos / 100,
+  }))
+
+  const expensesData = expensesCategoryData.map((item) => ({
+    category: item.category,
+    label: item.label,
+    value: item.value / 100, // Converter centavos para reais
+    fill: `var(--chart-${Math.floor(Math.random() * 11) + 1})`, // Cor aleatória para cada categoria
+  }))
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Carregando dados dos gráficos...
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (hasError) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <p className="text-sm text-destructive">
+            Erro ao carregar dados dos gráficos.
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Tente recarregar a página.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       {/* Seção de Gráficos */}
@@ -91,38 +143,44 @@ export function DashboardCharts() {
         {/* Gráfico de Evolução Financeira */}
         <div className="bg-card rounded-lg shadow-sm border-border border p-6">
           <h2 className="text-xl font-semibold text-card-foreground mb-4">
-            Evolução Financeira (Últimos 5 Meses)
+            Evolução Financeira (Últimos Meses)
           </h2>
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <LineChart data={monthlyBalanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-              <Line
-                type="monotone"
-                dataKey="saldo"
-                stroke="var(--color-saldo)"
-                strokeWidth={2}
-                dot={{ fill: 'var(--color-saldo)' }}
-              />
-              <Line
-                type="monotone"
-                dataKey="receitas"
-                stroke="var(--color-receitas)"
-                strokeWidth={2}
-                dot={{ fill: 'var(--color-receitas)' }}
-              />
-              <Line
-                type="monotone"
-                dataKey="gastos"
-                stroke="var(--color-gastos)"
-                strokeWidth={2}
-                dot={{ fill: 'var(--color-gastos)' }}
-              />
-            </LineChart>
-          </ChartContainer>
+          {chartData.length > 0 ? (
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Line
+                  type="monotone"
+                  dataKey="saldo"
+                  stroke="var(--color-saldo)"
+                  strokeWidth={2}
+                  dot={{ fill: 'var(--color-saldo)' }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="receitas"
+                  stroke="var(--color-receitas)"
+                  strokeWidth={2}
+                  dot={{ fill: 'var(--color-receitas)' }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="gastos"
+                  stroke="var(--color-gastos)"
+                  strokeWidth={2}
+                  dot={{ fill: 'var(--color-gastos)' }}
+                />
+              </LineChart>
+            </ChartContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+              Nenhum dado financeiro disponível
+            </div>
+          )}
         </div>
 
         {/* Gráfico de Distribuição de Gastos */}
@@ -130,20 +188,33 @@ export function DashboardCharts() {
           <h2 className="text-xl font-semibold text-card-foreground mb-4">
             Distribuição de Gastos por Categoria
           </h2>
-          <ChartContainer config={expensesConfig} className="h-[300px] w-full">
-            <PieChart>
-              <Pie
-                data={expensesData}
-                dataKey="value"
-                nameKey="category"
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                label={({ label, value }) => `${label}: R$ ${value}`}
-              />
-              <ChartTooltip content={<ChartTooltipContent nameKey="label" />} />
-            </PieChart>
-          </ChartContainer>
+          {expensesData.length > 0 ? (
+            <ChartContainer
+              config={expensesConfig}
+              className="h-[300px] w-full"
+            >
+              <PieChart>
+                <Pie
+                  data={expensesData}
+                  dataKey="value"
+                  nameKey="category"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label={({ label, value }) =>
+                    `${label}: ${formatCurrency(value * 100)}`
+                  }
+                />
+                <ChartTooltip
+                  content={<ChartTooltipContent nameKey="label" />}
+                />
+              </PieChart>
+            </ChartContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+              Nenhuma despesa categorizada no período
+            </div>
+          )}
         </div>
       </div>
 
@@ -152,25 +223,31 @@ export function DashboardCharts() {
         <h2 className="text-xl font-semibold text-card-foreground mb-4">
           Comparativo Mensal: Receitas vs Gastos
         </h2>
-        <ChartContainer config={chartConfig} className="h-[400px] w-full">
-          <BarChart data={monthlyBalanceData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="receitas"
-              fill="var(--color-receitas)"
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              dataKey="gastos"
-              fill="var(--color-gastos)"
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ChartContainer>
+        {chartData.length > 0 ? (
+          <ChartContainer config={chartConfig} className="h-[400px] w-full">
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Bar
+                dataKey="receitas"
+                fill="var(--color-receitas)"
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                dataKey="gastos"
+                fill="var(--color-gastos)"
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ChartContainer>
+        ) : (
+          <div className="h-[400px] flex items-center justify-center text-muted-foreground">
+            Nenhum dado financeiro disponível para comparação
+          </div>
+        )}
       </div>
     </>
   )
