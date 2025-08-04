@@ -17,7 +17,7 @@ interface TransactionItemProps {
 export function TransactionItem({
   transaction,
   primaryAccount,
-  onProcessTransaction,
+  // onProcessTransaction,
   onEditTransaction,
   onDeleteTransaction,
   onRefreshBankAccounts,
@@ -160,25 +160,6 @@ export function TransactionItem({
         {config.label}
       </span>
     )
-  }
-
-  const getStatusIndicator = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-        )
-      case 'failed':
-        return (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
-        )
-      case 'completed':
-        return (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
-        )
-      default:
-        return null
-    }
   }
 
   const handleEditTransaction = () => {

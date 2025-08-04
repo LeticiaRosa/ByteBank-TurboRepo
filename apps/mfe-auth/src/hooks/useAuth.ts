@@ -178,7 +178,7 @@ export function useAuth() {
       userId: string
       accountData: CreateBankAccountData
     }) => bankAccountService.createBankAccount(userId, accountData),
-    onSuccess: (bankAccount) => {
+    onSuccess: () => {
       // Invalida queries relacionadas a contas bancárias se houver
       queryClient.invalidateQueries({ queryKey: ['bank_accounts'] })
     },
