@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
 
   const isProduction = mode === 'production'
   const menuUrl = isProduction
-    ? env.VITE_MENU_MFE_URL || 'https://bytebank-menu.netlify.app'
+    ? env.VITE_MENU_MFE_URL || 'https://appbytebank-menu.netlify.app/'
     : 'http://localhost:3002'
 
   return {
