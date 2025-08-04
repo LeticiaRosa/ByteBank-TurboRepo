@@ -15,8 +15,12 @@ export function AuthForm() {
   }
 
   return isSignUp ? (
-    <SignUp onToggleMode={toggleMode} />
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <SignUp onToggleMode={toggleMode} />
+    </div>
   ) : (
-    <SignIn onToggleMode={toggleMode} />
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <SignIn onToggleMode={toggleMode} />
+    </div>
   )
 }
