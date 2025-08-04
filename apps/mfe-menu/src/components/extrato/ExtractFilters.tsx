@@ -1,5 +1,16 @@
 import { useState } from 'react'
-import { Button, Input, Card, CardContent, DatePicker } from '@bytebank/ui'
+import {
+  Button,
+  Input,
+  Card,
+  CardContent,
+  DatePicker,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@bytebank/ui'
 
 export interface FilterOptions {
   dateFrom: string
@@ -155,20 +166,23 @@ export function ExtractFilters({
                 <label className="text-sm font-medium text-foreground">
                   Tipo
                 </label>
-                <select
-                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring bg-card text-foreground"
-                  value={filters.transactionType}
-                  onChange={(e) =>
-                    handleFilterChange('transactionType', e.target.value)
+                <Select
+                  value={filters.transactionType || undefined}
+                  onValueChange={(value) =>
+                    handleFilterChange('transactionType', value || '')
                   }
                 >
-                  <option value="">Todos os tipos</option>
-                  <option value="deposit">Depósito</option>
-                  <option value="withdrawal">Saque</option>
-                  <option value="transfer">Transferência</option>
-                  <option value="payment">Pagamento</option>
-                  <option value="fee">Taxa</option>
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todos os tipos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="deposit">Depósito</SelectItem>
+                    <SelectItem value="withdrawal">Saque</SelectItem>
+                    <SelectItem value="transfer">Transferência</SelectItem>
+                    <SelectItem value="payment">Pagamento</SelectItem>
+                    <SelectItem value="fee">Taxa</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Status */}
@@ -176,17 +190,22 @@ export function ExtractFilters({
                 <label className="text-sm font-medium text-foreground">
                   Status
                 </label>
-                <select
-                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring bg-card text-foreground"
-                  value={filters.status}
-                  onChange={(e) => handleFilterChange('status', e.target.value)}
+                <Select
+                  value={filters.status || undefined}
+                  onValueChange={(value) =>
+                    handleFilterChange('status', value || '')
+                  }
                 >
-                  <option value="">Todos os status</option>
-                  <option value="completed">Concluída</option>
-                  <option value="pending">Pendente</option>
-                  <option value="failed">Falhou</option>
-                  <option value="cancelled">Cancelada</option>
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todos os status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="completed">Concluída</SelectItem>
+                    <SelectItem value="pending">Pendente</SelectItem>
+                    <SelectItem value="failed">Falhou</SelectItem>
+                    <SelectItem value="cancelled">Cancelada</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Valor mínimo */}

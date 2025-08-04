@@ -37,10 +37,9 @@ export const ThemeToggle = () => {
               />
             </svg>
           )}
-          {theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
-        </div>
-        <div className="text-xs text-muted-foreground">
-          {theme === 'dark' ? 'Ativo' : 'Inativo'}
+          <p className=" pl-2">
+            {theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
+          </p>
         </div>
       </div>
     </DropdownMenuItem>

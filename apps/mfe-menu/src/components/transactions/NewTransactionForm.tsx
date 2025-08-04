@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { useToast, Button, Input } from '@bytebank/ui'
+import {
+  useToast,
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@bytebank/ui'
 import {
   type CreateTransactionData,
   type BankAccount,
@@ -271,29 +280,23 @@ export function NewTransactionForm({
           <label className="block text-sm font-medium text-card-foreground mb-1">
             Tipo de Transação *
           </label>
-          <select
+          <Select
             value={formData.transaction_type}
-            onChange={(e) =>
-              handleInputChange('transaction_type', e.target.value as any)
+            onValueChange={(value) =>
+              handleInputChange('transaction_type', value as any)
             }
-            className="w-full pl-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-card-foreground bg-card"
           >
-            <option value="deposit" className="text-card-foreground">
-              Depósito
-            </option>
-            <option value="withdrawal" className="text-card-foreground">
-              Saque
-            </option>
-            <option value="transfer" className="text-card-foreground">
-              Transferência
-            </option>
-            <option value="payment" className="text-card-foreground">
-              Pagamento
-            </option>
-            <option value="fee" className="text-card-foreground">
-              Taxa
-            </option>
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecione o tipo de transação" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="deposit">Depósito</SelectItem>
+              <SelectItem value="withdrawal">Saque</SelectItem>
+              <SelectItem value="transfer">Transferência</SelectItem>
+              <SelectItem value="payment">Pagamento</SelectItem>
+              <SelectItem value="fee">Taxa</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Valor */}

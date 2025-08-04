@@ -41,6 +41,18 @@ export {
   useFormField,
 } from "./components/form.js";
 export { Switch } from "./components/switch.js";
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "./components/select.js";
 export { Toaster } from "./components/sonner.js";
 export {
   Sidebar,
