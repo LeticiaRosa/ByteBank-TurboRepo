@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTransactions, type Transaction } from '../hooks'
 import {
   NewTransactionForm,
@@ -15,10 +15,8 @@ function TransferenciasPage() {
     useState<Transaction | null>(null)
 
   const {
-    transactions,
     bankAccounts,
     primaryAccount,
-    isLoadingTransactions,
     isLoadingAccounts,
     createTransaction,
     updateTransaction,
@@ -30,22 +28,6 @@ function TransferenciasPage() {
     isUpdating,
   } = useTransactions()
 
-  // Efeito para atualizar saldo automaticamente quando há transações pendentes
-  useEffect(() => {
-    const hasPendingTransactions = transactions?.some(
-      (t) => t.status === 'pending',
-    )
-
-    if (hasPendingTransactions) {
-      // Atualizar contas bancárias a cada 10 segundos quando há transações pendentes
-      const interval = setInterval(() => {
-        refreshBankAccounts()
-      }, 10000)
-
-      return () => clearInterval(interval)
-    }
-  }, [transactions, refreshBankAccounts])
-
   // Função para lidar com a edição de transações
   const handleEditTransaction = (transaction: Transaction) => {
     setEditingTransaction(transaction)
@@ -56,7 +38,7 @@ function TransferenciasPage() {
     setEditingTransaction(null)
   }
 
-  if (isLoadingTransactions || isLoadingAccounts) {
+  if (isLoadingAccounts) {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
@@ -87,9 +69,7 @@ function TransferenciasPage() {
 
         {/* Histórico Recente */}
         <RecentTransactions
-          transactions={transactions}
           primaryAccount={primaryAccount}
-          isLoadingTransactions={isLoadingTransactions}
           onProcessTransaction={processTransaction}
           onEditTransaction={handleEditTransaction}
           onDeleteTransaction={deleteTransaction}

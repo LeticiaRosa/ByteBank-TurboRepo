@@ -11,12 +11,14 @@ import {
 import { useTransactions, type Transaction } from '../hooks'
 import { useFilteredTransactions } from '../hooks/useFilteredTransactions'
 import { authService } from '../lib/auth'
-import { AccountInfos } from '../components'
+import { AccountInfos, SimplePagination } from '../components'
 import {
   TransactionItem,
   ExtractFilters,
   type FilterOptions,
 } from '../components/extrato'
+
+const PAGE_SIZE = 10
 
 export const Route = createFileRoute('/extrato')({
   component: ExtractPage,
@@ -27,6 +29,8 @@ function ExtractPage() {
   const { deleteTransaction, processTransaction } = useTransactions()
 
   const toast = useToast()
+
+  const [currentPage, setCurrentPage] = useState(1)
 
   const [filters, setFilters] = useState<FilterOptions>({
     dateFrom: '',
@@ -42,7 +46,10 @@ function ExtractPage() {
 
   // Usar o hook para buscar transações filtradas com paginação
   const { data: result, isLoading: isLoadingTransactions } =
-    useFilteredTransactions(filters, userId || '', { page: 1, pageSize: 10 })
+    useFilteredTransactions(filters, userId || '', {
+      page: currentPage,
+      pageSize: PAGE_SIZE,
+    })
 
   /*Corrigindo o valor de amount de centavos para reais*/
   const filteredTransactions = result?.data
@@ -121,6 +128,7 @@ function ExtractPage() {
 
   const handleFilterChange = (newFilters: FilterOptions) => {
     setFilters(newFilters)
+    setCurrentPage(1) // Reset para primeira página quando filtros mudam
   }
 
   const handleResetFilters = () => {
@@ -135,6 +143,11 @@ function ExtractPage() {
       category: 'all',
       senderName: '',
     })
+    setCurrentPage(1) // Reset para primeira página
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
   }
 
   const exportToCSV = () => {
@@ -242,10 +255,22 @@ function ExtractPage() {
           <div className="flex items-center justify-between">
             <CardTitle>
               Transações
-              {filteredTransactions.length > 0 && (
+              {!isLoadingTransactions && result?.pagination && (
                 <span className="text-muted-foreground font-normal ml-2">
-                  ({filteredTransactions.length}{' '}
-                  {filteredTransactions.length === 1 ? 'item' : 'itens'})
+                  ({result.pagination.total || filteredTransactions.length}{' '}
+                  {(result.pagination.total || filteredTransactions.length) ===
+                  1
+                    ? 'item'
+                    : 'itens'}
+                  {result.pagination.total &&
+                    result.pagination.total > PAGE_SIZE && (
+                      <>
+                        {' '}
+                        • Página {currentPage} de{' '}
+                        {Math.ceil(result.pagination.total / PAGE_SIZE)}
+                      </>
+                    )}
+                  )
                 </span>
               )}
             </CardTitle>
@@ -319,6 +344,20 @@ function ExtractPage() {
               ))}
             </div>
           )}
+
+          {/* Paginação */}
+          {!isLoadingTransactions &&
+            filteredTransactions.length > 0 &&
+            result?.pagination && (
+              <SimplePagination
+                currentPage={currentPage}
+                hasNextPage={result.pagination.hasNextPage}
+                hasPreviousPage={result.pagination.hasPreviousPage}
+                onPageChange={handlePageChange}
+                itemCount={filteredTransactions.length}
+                totalCount={result.pagination.total}
+              />
+            )}
         </CardContent>
       </Card>
     </div>

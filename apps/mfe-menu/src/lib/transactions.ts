@@ -398,13 +398,20 @@ export interface BankAccount {
 // Serviço de transações - responsabilidade única para operações de transação
 export class TransactionService {
   /**
-   * Lista todas as transações do usuário autenticado
+   * Lista transações do usuário autenticado com limitação
    * @returns Transações com valores convertidos para reais
    */
   public async getTransactions(): Promise<Transaction[]> {
+    const userId = authService.getCurrentUserId()
+    if (!userId) {
+      throw new Error('Usuário não autenticado')
+    }
+
     const transactions = await httpClient.get<Transaction[]>('/transactions', {
       select: '*',
+      user_id: `eq.${userId}`, // FILTRO CRÍTICO: apenas transações do usuário
       order: 'created_at.desc',
+      limit: '50', // Limitar a 50 transações recentes para performance
     })
 
     // Converter valores de centavos para reais
@@ -415,12 +422,18 @@ export class TransactionService {
   }
 
   /**
-   * Busca uma transação específica por ID
+   * Busca uma transação específica por ID do usuário autenticado
    * @returns Transação com valor convertido para reais
    */
   public async getTransaction(id: string): Promise<Transaction> {
+    const userId = authService.getCurrentUserId()
+    if (!userId) {
+      throw new Error('Usuário não autenticado')
+    }
+
     const transactions = await httpClient.get<Transaction[]>('/transactions', {
       id: `eq.${id}`,
+      user_id: `eq.${userId}`, // FILTRO CRÍTICO: apenas transações do usuário
       select: '*',
     })
 
@@ -668,14 +681,20 @@ export class TransactionService {
   }
 
   /**
-   * Reprocessa transações pendentes (útil para casos de falha)
+   * Reprocessa transações pendentes do usuário autenticado
    */
   public async reprocessPendingTransactions(): Promise<void> {
     try {
+      const userId = authService.getCurrentUserId()
+      if (!userId) {
+        throw new Error('Usuário não autenticado')
+      }
+
       const pendingTransactions = await httpClient.get<Transaction[]>(
         '/transactions',
         {
           status: 'eq.pending',
+          user_id: `eq.${userId}`, // FILTRO CRÍTICO: apenas transações do usuário
           select: 'id',
         },
       )
@@ -701,12 +720,18 @@ export class TransactionService {
 // Serviço de contas bancárias - responsabilidade única para operações de conta
 export class BankAccountService {
   /**
-   * Lista todas as contas bancárias ativas do usuário
+   * Lista todas as contas bancárias ativas do usuário autenticado
    * @returns Contas com saldos convertidos para reais
    */
   public async getBankAccounts(): Promise<BankAccount[]> {
+    const userId = authService.getCurrentUserId()
+    if (!userId) {
+      throw new Error('Usuário não autenticado')
+    }
+
     const accounts = await httpClient.get<BankAccount[]>('/bank_accounts', {
       select: '*',
+      user_id: `eq.${userId}`, // FILTRO CRÍTICO: apenas contas do usuário
       is_active: 'eq.true',
       order: 'created_at.desc',
     })
@@ -728,14 +753,20 @@ export class BankAccountService {
   }
 
   /**
-   * Busca uma conta pelo número
+   * Busca uma conta pelo número do usuário autenticado
    * @returns Conta com saldo convertido para reais
    */
   public async getAccountByNumber(
     accountNumber: string,
   ): Promise<BankAccount | null> {
+    const userId = authService.getCurrentUserId()
+    if (!userId) {
+      throw new Error('Usuário não autenticado')
+    }
+
     const accounts = await httpClient.get<BankAccount[]>('/bank_accounts', {
       account_number: `eq.${accountNumber}`,
+      user_id: `eq.${userId}`, // FILTRO CRÍTICO: apenas contas do usuário
       is_active: 'eq.true',
       select: '*',
     })

@@ -8,6 +8,7 @@ export { default as DashboardLayout } from './DashboardLayout'
 export { ServiceItem } from './ServiceItem'
 export { AccountInfos } from './AccountInfos'
 export { DashboardCharts } from './DashboardCharts'
+export { Pagination, SimplePagination } from './Pagination'
 
 // Componentes de transações
 export * from './transactions'

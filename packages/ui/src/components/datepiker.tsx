@@ -39,8 +39,6 @@ function Calendar22({
   };
 
   const selectedDate = value ? parseDate(value) : undefined;
-  console.log(value);
-  console.log(selectedDate);
 
   const maxDate = max ? parseDate(max) : undefined;
 

@@ -8,8 +8,8 @@
           return pkg
         }
       ,
-        "react-dom": async () => {
-          let pkg = await import("__mf__virtual/mfe_mf_2_auth__prebuild__react_mf_2_dom__prebuild__.js")
+        "@tanstack/react-query": async () => {
+          let pkg = await import("__mf__virtual/mfe_mf_2_auth__prebuild___mf_0_tanstack_mf_1_react_mf_2_query__prebuild__.js")
           return pkg
         }
       ,
@@ -18,8 +18,8 @@
           return pkg
         }
       ,
-        "@tanstack/react-query": async () => {
-          let pkg = await import("__mf__virtual/mfe_mf_2_auth__prebuild___mf_0_tanstack_mf_1_react_mf_2_query__prebuild__.js")
+        "react-dom": async () => {
+          let pkg = await import("__mf__virtual/mfe_mf_2_auth__prebuild__react_mf_2_dom__prebuild__.js")
           return pkg
         }
       
@@ -52,15 +52,15 @@
             }
           }
         ,
-          "react-dom": {
-            name: "react-dom",
-            version: "18.3.1",
+          "@tanstack/react-query": {
+            name: "@tanstack/react-query",
+            version: "5.84.1",
             scope: ["default"],
             loaded: false,
             from: "mfe-auth",
             async get () {
-              usedShared["react-dom"].loaded = true
-              const {"react-dom": pkgDynamicImport} = importMap 
+              usedShared["@tanstack/react-query"].loaded = true
+              const {"@tanstack/react-query": pkgDynamicImport} = importMap 
               const res = await pkgDynamicImport()
               const exportModule = {...res}
               // All npm packages pre-built by vite will be converted to esm
@@ -74,7 +74,7 @@
             },
             shareConfig: {
               singleton: true,
-              requiredVersion: "^18.3.1"
+              requiredVersion: "^5.84.1"
             }
           }
         ,
@@ -104,15 +104,15 @@
             }
           }
         ,
-          "@tanstack/react-query": {
-            name: "@tanstack/react-query",
-            version: "5.84.1",
+          "react-dom": {
+            name: "react-dom",
+            version: "18.3.1",
             scope: ["default"],
             loaded: false,
             from: "mfe-auth",
             async get () {
-              usedShared["@tanstack/react-query"].loaded = true
-              const {"@tanstack/react-query": pkgDynamicImport} = importMap 
+              usedShared["react-dom"].loaded = true
+              const {"react-dom": pkgDynamicImport} = importMap 
               const res = await pkgDynamicImport()
               const exportModule = {...res}
               // All npm packages pre-built by vite will be converted to esm
@@ -126,7 +126,7 @@
             },
             shareConfig: {
               singleton: true,
-              requiredVersion: "^5.84.1"
+              requiredVersion: "^18.3.1"
             }
           }
         

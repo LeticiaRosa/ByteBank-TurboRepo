@@ -27,8 +27,6 @@ export function AccountInfos({
   }
 
   const formatValue = (value: number) => {
-    console.log(value)
-
     if (formatType === 'number') {
       return value.toLocaleString('pt-BR')
     }
@@ -60,7 +58,6 @@ export function AccountInfos({
       </div>
     )
   }
-  console.log(title)
   if (amount < 0) {
     return null
   }

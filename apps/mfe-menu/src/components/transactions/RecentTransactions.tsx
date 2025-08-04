@@ -1,12 +1,12 @@
 import { type Transaction, type BankAccount } from '../../hooks'
+import { useFilteredTransactions } from '../../hooks/useFilteredTransactions'
 import { TransactionItem } from './TransactionItem'
 import { Button } from '@bytebank/ui'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { authService } from '../../lib/auth'
 
 interface RecentTransactionsProps {
-  transactions: Transaction[] | undefined
   primaryAccount: BankAccount | null | undefined
-  isLoadingTransactions: boolean
   onProcessTransaction: (
     transactionId: string,
     action: 'complete' | 'fail',
@@ -19,16 +19,57 @@ interface RecentTransactionsProps {
 }
 
 export function RecentTransactions({
-  transactions,
   primaryAccount,
-  isLoadingTransactions,
   onProcessTransaction,
   onEditTransaction,
   onDeleteTransaction,
   onReprocessPendingTransactions,
   onRefreshBankAccounts,
 }: RecentTransactionsProps) {
-  const [visibleTransactionsCount, setVisibleTransactionsCount] = useState(5)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>([])
+  const userId = authService.getCurrentUserId()
+
+  // Calcular data de 2 semanas atrás para transações recentes
+  const twoWeeksAgo = new Date()
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+  const dateFrom = twoWeeksAgo.toISOString().split('T')[0]
+
+  // Buscar transações recentes (5 por página)
+  const { data: result, isLoading: isLoadingTransactions } =
+    useFilteredTransactions(
+      {
+        dateFrom,
+        dateTo: '',
+        transactionType: '',
+        status: '',
+        minAmount: '',
+        maxAmount: '',
+        description: '',
+        category: '',
+        senderName: '',
+      },
+      userId || '',
+      { page: currentPage, pageSize: 5 },
+    )
+
+  // Atualizar a lista de transações quando novos dados chegarem
+  useEffect(() => {
+    if (result?.data) {
+      if (currentPage === 1) {
+        // Primeira página - substitui todas as transações
+        setAllTransactions(result.data)
+      } else {
+        // Páginas subsequentes - adiciona às transações existentes
+        setAllTransactions(prev => {
+          const newTransactions = result.data.filter(
+            newTx => !prev.some(existingTx => existingTx.id === newTx.id)
+          )
+          return [...prev, ...newTransactions]
+        })
+      }
+    }
+  }, [result?.data, currentPage])
 
   const handleReprocessAllPending = async () => {
     await onReprocessPendingTransactions()
@@ -39,14 +80,14 @@ export function RecentTransactions({
     }
   }
 
-  const handleViewAllTransactions = () => {
-    if (transactions) {
-      const nextCount = visibleTransactionsCount + 5
-      setVisibleTransactionsCount(
-        nextCount > transactions.length ? transactions.length : nextCount,
-      )
-    }
+  const handleLoadMoreTransactions = () => {
+    setCurrentPage(prev => prev + 1)
   }
+
+  // Verificar se há mais transações para carregar
+  const hasMoreTransactions = result?.pagination && 
+    result.pagination.total && 
+    currentPage < Math.ceil(result.pagination.total / 5)
 
   if (isLoadingTransactions) {
     return (
@@ -69,7 +110,7 @@ export function RecentTransactions({
         </h2>
 
         {/* Botão para reprocessar transações pendentes */}
-        {transactions && transactions.some((t) => t.status === 'pending') && (
+        {allTransactions && allTransactions.some((t: Transaction) => t.status === 'pending') && (
           <Button
             onClick={handleReprocessAllPending}
             size="sm"
@@ -81,11 +122,9 @@ export function RecentTransactions({
         )}
       </div>
 
-      {transactions && transactions.length > 0 ? (
+      {allTransactions && allTransactions.length > 0 ? (
         <div className="space-y-3">
-          {transactions
-            .slice(0, visibleTransactionsCount)
-            .map((transaction: Transaction) => (
+          {allTransactions.map((transaction: Transaction) => (
               <TransactionItem
                 key={transaction.id}
                 transaction={transaction}
@@ -121,14 +160,15 @@ export function RecentTransactions({
         </div>
       )}
 
-      {transactions && transactions.length > visibleTransactionsCount && (
+      {/* Botão para carregar mais transações */}
+      {hasMoreTransactions && (
         <Button
           variant="ghost"
           className="w-full mt-4 text-primary hover:text-primary/80 font-medium text-sm"
-          onClick={handleViewAllTransactions}
+          onClick={handleLoadMoreTransactions}
+          disabled={isLoadingTransactions}
         >
-          Carregar mais transações (
-          {transactions.length - visibleTransactionsCount} restantes)
+          {isLoadingTransactions ? 'Carregando...' : 'Carregar mais transações'}
         </Button>
       )}
     </div>
