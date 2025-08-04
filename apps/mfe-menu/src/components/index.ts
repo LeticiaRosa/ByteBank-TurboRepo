@@ -6,7 +6,7 @@ export { AuthGuard } from './AuthGuard'
 export { default as Header } from './Header'
 export { default as DashboardLayout } from './DashboardLayout'
 export { ServiceItem } from './ServiceItem'
-export { AccountBalance } from './AccountBalance'
+export { AccountInfos } from './AccountInfos'
 
 // Componentes de transações
 export * from './transactions'

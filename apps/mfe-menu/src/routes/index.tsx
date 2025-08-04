@@ -18,7 +18,8 @@ import {
   PieChart,
   Pie,
 } from 'recharts'
-import { AccountBalance } from '../components'
+import { AccountInfos } from '../components'
+import { useTransactions, useMonthlyFinancialSummary } from '../hooks'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -90,33 +91,46 @@ const expensesConfig = {
 } satisfies ChartConfig
 
 function HomePage() {
+  const { primaryAccount, isLoadingAccounts } = useTransactions()
+  const {
+    monthlyRevenue,
+    monthlyExpenses,
+    revenueGrowth,
+    expensesGrowth,
+    isLoading: isLoadingFinancialSummary,
+  } = useMonthlyFinancialSummary()
   return (
     <div className="w-full space-y-6">
       <h1 className="text-3xl font-bold text-foreground mb-6">Início</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <AccountBalance showeye={false} />
+        <AccountInfos
+          title="Saldo Principal"
+          text="Conta Corrente"
+          isLoadingAccounts={isLoadingAccounts}
+          amount={primaryAccount?.balance as number}
+          showeye={false}
+        />
+
         {/* Card de Receitas */}
-        <div className="bg-card rounded-lg shadow-sm border-border border p-6">
-          <h3 className="text-lg font-semibold text-card-foreground mb-2">
-            Receitas do Mês
-          </h3>
-          <p className="text-3xl font-bold text-chart-green">R$ 3.200,00</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            +12% vs mês anterior
-          </p>
-        </div>
+        <AccountInfos
+          title="Receitas do Mês"
+          text={`${revenueGrowth} vs mês anterior`}
+          isLoadingAccounts={isLoadingFinancialSummary}
+          amount={monthlyRevenue}
+          showeye={false}
+          colorType="success"
+        />
 
         {/* Card de Gastos */}
-        <div className="bg-card rounded-lg shadow-sm border-border border p-6">
-          <h3 className="text-lg font-semibold text-card-foreground mb-2">
-            Gastos do Mês
-          </h3>
-          <p className="text-3xl font-bold text-destructive">R$ 1.450,20</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            -5% vs mês anterior
-          </p>
-        </div>
+        <AccountInfos
+          title="Gastos do Mês"
+          text={`${expensesGrowth} vs mês anterior`}
+          isLoadingAccounts={isLoadingFinancialSummary}
+          amount={monthlyExpenses}
+          showeye={false}
+          colorType="destructive"
+        />
       </div>
 
       {/* Seção de Gráficos */}

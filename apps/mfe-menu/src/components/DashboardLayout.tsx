@@ -12,7 +12,8 @@ import {
 } from '@bytebank/ui'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ThemeProvider } from '../hooks/useTheme'
-import { AccountBalance } from './AccountBalance'
+import { AccountInfos } from './AccountInfos'
+import { useTransactions } from '../hooks'
 
 const menuItems = [
   {
@@ -49,6 +50,25 @@ const menuItems = [
           strokeLinejoin="round"
           strokeWidth={2}
           d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+        />
+      </svg>
+    ),
+  },
+  {
+    title: 'Extrato',
+    path: '/extrato',
+    icon: (
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
         />
       </svg>
     ),
@@ -100,6 +120,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation()
   const currentPath = location.pathname
+  const { primaryAccount, isLoadingAccounts } = useTransactions()
 
   const currentPathWithoutBase = currentPath.startsWith('/app2')
     ? currentPath.replace('/app2', '') || '/'
@@ -150,7 +171,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </SidebarMenu>
               </div>
               <div>
-                <AccountBalance />
+                <AccountInfos
+                  title="Saldo Principal"
+                  text="Conta Corrente"
+                  isLoadingAccounts={isLoadingAccounts}
+                  amount={(primaryAccount?.balance as number) || 0}
+                />
               </div>
             </SidebarContent>
           </Sidebar>

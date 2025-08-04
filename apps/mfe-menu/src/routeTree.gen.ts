@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransacoesRouteImport } from './routes/transacoes'
 import { Route as OutrosServicosRouteImport } from './routes/outros-servicos'
 import { Route as InvestimentosRouteImport } from './routes/investimentos'
+import { Route as ExtratoRouteImport } from './routes/extrato'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TransacoesRoute = TransacoesRouteImport.update({
@@ -29,6 +30,11 @@ const InvestimentosRoute = InvestimentosRouteImport.update({
   path: '/investimentos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExtratoRoute = ExtratoRouteImport.update({
+  id: '/extrato',
+  path: '/extrato',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/extrato': typeof ExtratoRoute
   '/investimentos': typeof InvestimentosRoute
   '/outros-servicos': typeof OutrosServicosRoute
   '/transacoes': typeof TransacoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/extrato': typeof ExtratoRoute
   '/investimentos': typeof InvestimentosRoute
   '/outros-servicos': typeof OutrosServicosRoute
   '/transacoes': typeof TransacoesRoute
@@ -50,20 +58,33 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/extrato': typeof ExtratoRoute
   '/investimentos': typeof InvestimentosRoute
   '/outros-servicos': typeof OutrosServicosRoute
   '/transacoes': typeof TransacoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/investimentos' | '/outros-servicos' | '/transacoes'
+  fullPaths:
+    | '/'
+    | '/extrato'
+    | '/investimentos'
+    | '/outros-servicos'
+    | '/transacoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/investimentos' | '/outros-servicos' | '/transacoes'
-  id: '__root__' | '/' | '/investimentos' | '/outros-servicos' | '/transacoes'
+  to: '/' | '/extrato' | '/investimentos' | '/outros-servicos' | '/transacoes'
+  id:
+    | '__root__'
+    | '/'
+    | '/extrato'
+    | '/investimentos'
+    | '/outros-servicos'
+    | '/transacoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExtratoRoute: typeof ExtratoRoute
   InvestimentosRoute: typeof InvestimentosRoute
   OutrosServicosRoute: typeof OutrosServicosRoute
   TransacoesRoute: typeof TransacoesRoute
@@ -92,6 +113,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestimentosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/extrato': {
+      id: '/extrato'
+      path: '/extrato'
+      fullPath: '/extrato'
+      preLoaderRoute: typeof ExtratoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +132,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExtratoRoute: ExtratoRoute,
   InvestimentosRoute: InvestimentosRoute,
   OutrosServicosRoute: OutrosServicosRoute,
   TransacoesRoute: TransacoesRoute,

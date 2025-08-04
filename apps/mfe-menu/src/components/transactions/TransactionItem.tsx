@@ -1,5 +1,12 @@
+import { useState } from 'react'
 import { type Transaction, type BankAccount } from '../../hooks'
-import { Button } from '@bytebank/ui'
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@bytebank/ui'
 
 interface TransactionItemProps {
   transaction: Transaction
@@ -22,6 +29,7 @@ export function TransactionItem({
   onDeleteTransaction,
   onRefreshBankAccounts,
 }: TransactionItemProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const isOutgoing = transaction.from_account_id === primaryAccount?.id
   const amount = transaction.amount
 
@@ -258,56 +266,63 @@ export function TransactionItem({
 
         {/* Botões de ação */}
         <div className="flex gap-2">
-          {/* Botão de editar - disponível para transações pending e failed */}
-          {onEditTransaction && (
-            <Button
-              onClick={handleEditTransaction}
-              size="sm"
-              className="flex items-center gap-1 text-xs bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-1.5 rounded-md transition-colors shadow-sm"
-              title="Editar transação"
-            >
-              <svg
-                className="w-3 h-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-              Editar
-            </Button>
-          )}
+          {/* Menu de ações */}
 
-          {/* Botão de excluir - disponível para transações pending e failed */}
-          {onDeleteTransaction && (
-            <Button
-              onClick={handleDeleteTransaction}
-              size="sm"
-              variant="destructive"
-              className="flex items-center gap-1 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90 px-3 py-1.5 rounded-md transition-colors shadow-sm"
-              title="Excluir transação"
-            >
-              <svg
-                className="w-3 h-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-1"
+                aria-label="Menu de ações"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-              Excluir
-            </Button>
-          )}
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleEditTransaction}>
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleDeleteTransaction}
+                className="text-destructive"
+              >
+                <svg
+                  className="w-3 h-3 "
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                Excluir
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

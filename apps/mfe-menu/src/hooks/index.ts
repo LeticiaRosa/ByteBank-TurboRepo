@@ -20,3 +20,8 @@ export {
   usePrimaryBankAccount,
   useBankAccountByNumber,
 } from './useBankAccounts'
+
+export {
+  useMonthlyFinancialSummary,
+  type MonthlyFinancialSummary,
+} from './useMonthlyFinancialSummary'

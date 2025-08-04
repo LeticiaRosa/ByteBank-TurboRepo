@@ -1,4 +1,3 @@
-import { AccountBalance } from './AccountBalance'
 import { Logo } from './Logo'
 import { UserDropdown } from './UserDropdown'
 import { SidebarTrigger } from '@bytebank/ui'
