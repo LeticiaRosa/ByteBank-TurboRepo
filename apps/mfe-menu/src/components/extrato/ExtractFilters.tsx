@@ -36,12 +36,12 @@ export function ExtractFilters({
   const [filters, setFilters] = useState<FilterOptions>({
     dateFrom: '',
     dateTo: '',
-    transactionType: '',
-    status: '',
+    transactionType: 'all',
+    status: 'all',
     minAmount: '',
     maxAmount: '',
     description: '',
-    category: '',
+    category: 'all',
     senderName: '',
   })
 
@@ -57,12 +57,12 @@ export function ExtractFilters({
     const resetFilters: FilterOptions = {
       dateFrom: '',
       dateTo: '',
-      transactionType: '',
-      status: '',
+      transactionType: 'all',
+      status: 'all',
       minAmount: '',
       maxAmount: '',
       description: '',
-      category: '',
+      category: 'all',
       senderName: '',
     }
     setFilters(resetFilters)
@@ -182,6 +182,7 @@ export function ExtractFilters({
                     <SelectValue placeholder="Todos os tipos" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
                     <SelectItem value="deposit">Depósito</SelectItem>
                     <SelectItem value="withdrawal">Saque</SelectItem>
                     <SelectItem value="transfer">Transferência</SelectItem>
@@ -206,6 +207,7 @@ export function ExtractFilters({
                     <SelectValue placeholder="Todos os status" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all">Todos os status</SelectItem>
                     <SelectItem value="completed">Concluída</SelectItem>
                     <SelectItem value="pending">Pendente</SelectItem>
                     <SelectItem value="failed">Falhou</SelectItem>
@@ -229,6 +231,7 @@ export function ExtractFilters({
                     <SelectValue placeholder="Todas as categorias" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all">Todas as categorias</SelectItem>
                     <SelectItem value="alimentacao">Alimentação</SelectItem>
                     <SelectItem value="transporte">Transporte</SelectItem>
                     <SelectItem value="saude">Saúde</SelectItem>

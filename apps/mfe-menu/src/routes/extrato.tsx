@@ -122,6 +122,7 @@ function ExtractPage() {
 
       // Filtro por tipo
       if (
+        filters.transactionType !== 'all' &&
         filters.transactionType &&
         transaction.transaction_type !== filters.transactionType
       ) {
@@ -129,7 +130,11 @@ function ExtractPage() {
       }
 
       // Filtro por status
-      if (filters.status && transaction.status !== filters.status) {
+      if (
+        filters.status !== 'all' &&
+        filters.status &&
+        transaction.status !== filters.status
+      ) {
         return false
       }
 
@@ -153,7 +158,11 @@ function ExtractPage() {
       }
 
       // Filtro por categoria
-      if (filters.category && transaction.category !== filters.category) {
+      if (
+        filters.category !== 'all' &&
+        filters.category &&
+        transaction.category !== filters.category
+      ) {
         return false
       }
 
