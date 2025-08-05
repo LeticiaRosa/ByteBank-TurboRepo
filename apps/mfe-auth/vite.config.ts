@@ -8,16 +8,12 @@ import { resolve } from 'node:path'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-
+  console.log('Environment Variables', env)
   const isProduction = mode === 'production'
-  const menuUrl = isProduction
-    ? env.VITE_MENU_MFE_URL || 'https://appbytebank-menu.netlify.app/'
-    : 'http://localhost:3002'
+  const menuUrl = isProduction ? env.VITE_MENU_MFE_URL : 'http://localhost:3002'
 
   return {
-    base: isProduction
-      ? env.VITE_AUTH_BASE_URL || '/'
-      : 'http://localhost:3001',
+    base: isProduction ? env.VITE_AUTH_BASE_URL : 'http://localhost:3001',
     plugins: [
       tanstackRouter({
         target: 'react',

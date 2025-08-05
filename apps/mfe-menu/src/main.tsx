@@ -1,7 +1,7 @@
+import '@bytebank/ui/globals.css'
 import ReactDOM from 'react-dom/client'
 import AppRouter from './AppRouter'
 import reportWebVitals from './reportWebVitals.ts'
-import '@bytebank/ui/globals.css'
 
 // Render the app apenas quando executado standalone
 const rootElement = document.getElementById('app')

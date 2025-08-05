@@ -1,3 +1,4 @@
+import '@bytebank/ui/globals.css'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
@@ -10,7 +11,7 @@ import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 import { routeTree } from './routeTree.gen'
 
 import reportWebVitals from './reportWebVitals.ts'
-import '@bytebank/ui/globals.css'
+
 // Create a new router instance
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
