@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  # MFE Auth - Micro Frontend de Autenticação
+  mfe-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: bytebank-mfe-auth
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/mfe-auth/node_modules
+      - /app/apps/mfe-menu/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - VITE_APP_NAME=${VITE_APP_NAME:-ByteBank}
+      - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
+      - VITE_AUTH_MFE_URL=http://localhost:3001
+      - VITE_MENU_MFE_URL=http://localhost:3002
+      - VITE_AUTH_BASE_URL=http://localhost:3001
+      - VITE_MENU_BASE_URL=http://localhost:3002
+      - VITE_HOST=0.0.0.0
+    command: pnpm --filter=apps/mfe-auth dev --host 0.0.0.0
+    restart: unless-stopped
+
+  # MFE Menu - Micro Frontend do Dashboard/Menu
+  mfe-menu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: bytebank-mfe-menu
+    ports:
+      - "3002:3002"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/mfe-auth/node_modules
+      - /app/apps/mfe-menu/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - VITE_APP_NAME=${VITE_APP_NAME:-ByteBank}
+      - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
+      - VITE_AUTH_MFE_URL=http://localhost:3001
+      - VITE_MENU_MFE_URL=http://localhost:3002
+      - VITE_AUTH_BASE_URL=http://localhost:3001
+      - VITE_MENU_BASE_URL=http://localhost:3002
+      - VITE_HOST=0.0.0.0
+    command: pnpm --filter=apps/mfe-menu dev --host 0.0.0.0
+    restart: unless-stopped
