@@ -76,10 +76,37 @@ class BankAccountService {
     userId: string,
     accountData: CreateBankAccountData,
   ): Promise<BankAccount> {
-    // Gerar número de conta único baseado em timestamp e userId
-    const timestamp = Date.now().toString()
-    const userIdShort = userId.slice(-6) // Últimos 6 caracteres do user ID
-    const accountNumber = `${timestamp.slice(-6)}${userIdShort}`
+    // Função para gerar número de conta único
+    const generateAccountNumber = () => {
+      const timestamp = Date.now().toString()
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0')
+      const userIdShort = userId.slice(-4) // Últimos 4 caracteres do user ID
+      return `${timestamp.slice(-8)}${random}${userIdShort}`
+    }
+
+    let accountNumber = generateAccountNumber()
+    let attempts = 0
+    const maxAttempts = 5
+
+    // Verificar se o número da conta já existe e gerar um novo se necessário
+    while (attempts < maxAttempts) {
+      const { data: existingAccount } = await supabase
+        .from('bank_accounts')
+        .select('account_number')
+        .eq('account_number', accountNumber)
+        .single()
+
+      if (!existingAccount) {
+        break // Número único encontrado
+      }
+
+      accountNumber = generateAccountNumber()
+      attempts++
+    }
+
+    if (attempts >= maxAttempts) {
+      throw new Error('Não foi possível gerar um número de conta único')
+    }
 
     const bankAccountData = {
       user_id: userId,
