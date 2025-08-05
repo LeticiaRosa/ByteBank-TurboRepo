@@ -107,6 +107,24 @@
   --chart-8: oklch(0.7686 0.1647 70.08);
   --chart-9: oklch(0.6368 0.2078 25.33);
   --chart-10: oklch(0.6056 0.2189 292.72);
+
+  /* Cores para gráficos de pizza - Light Mode */
+  --chart-pie-1: oklch(65% 0.18 0); /* Vermelho vibrante */
+  --chart-pie-2: oklch(68% 0.16 25); /* Laranja */
+  --chart-pie-3: oklch(72% 0.14 50); /* Amarelo dourado */
+  --chart-pie-4: oklch(60% 0.2 120); /* Verde esmeralda */
+  --chart-pie-5: oklch(58% 0.18 150); /* Verde água */
+  --chart-pie-6: oklch(62% 0.16 180); /* Ciano */
+  --chart-pie-7: oklch(55% 0.15 240); /* Azul índigo */
+  --chart-pie-8: oklch(60% 0.17 270); /* Roxo */
+  --chart-pie-9: oklch(68% 0.19 300); /* Magenta */
+  --chart-pie-10: oklch(65% 0.21 330); /* Rosa */
+  --chart-pie-11: oklch(58% 0.12 80); /* Verde lima */
+  --chart-pie-12: oklch(70% 0.15 200); /* Azul céu */
+  --chart-pie-13: oklch(62% 0.18 320); /* Rosa quente */
+  --chart-pie-14: oklch(66% 0.16 60); /* Amarelo mostarda */
+  --chart-pie-15: oklch(52% 0.14 280); /* Violeta profundo */
+
   --radius: 0.625rem;
   --sidebar: var(--gray-2);
   --sidebar-foreground: var(--gray-12);
@@ -143,6 +161,24 @@
   --chart-3: var(--blue-5);
   --chart-4: var(--gray-9);
   --chart-5: var(--gray-7);
+
+  /* Cores para gráficos de pizza - Dark Mode */
+  --chart-pie-1: oklch(75% 0.2 0); /* Vermelho brilhante */
+  --chart-pie-2: oklch(78% 0.18 25); /* Laranja vibrante */
+  --chart-pie-3: oklch(82% 0.16 50); /* Amarelo ouro brilhante */
+  --chart-pie-4: oklch(70% 0.22 120); /* Verde esmeralda brilhante */
+  --chart-pie-5: oklch(68% 0.2 150); /* Verde água vibrante */
+  --chart-pie-6: oklch(72% 0.18 180); /* Ciano brilhante */
+  --chart-pie-7: oklch(65% 0.17 240); /* Azul índigo vibrante */
+  --chart-pie-8: oklch(70% 0.19 270); /* Roxo brilhante */
+  --chart-pie-9: oklch(78% 0.21 300); /* Magenta vibrante */
+  --chart-pie-10: oklch(75% 0.23 330); /* Rosa brilhante */
+  --chart-pie-11: oklch(68% 0.14 80); /* Verde lima brilhante */
+  --chart-pie-12: oklch(80% 0.17 200); /* Azul céu vibrante */
+  --chart-pie-13: oklch(72% 0.2 320); /* Rosa quente brilhante */
+  --chart-pie-14: oklch(76% 0.18 60); /* Amarelo mostarda brilhante */
+  --chart-pie-15: oklch(62% 0.16 280); /* Violeta brilhante */
+
   --sidebar: var(--gray-2);
   --sidebar-foreground: var(--gray-12);
   --sidebar-primary: var(--blue-9);
@@ -189,6 +225,23 @@
   --color-chart-8: var(--chart-8);
   --color-chart-9: var(--chart-9);
   --color-chart-10: var(--chart-10);
+
+  /* Cores para gráficos de pizza */
+  --color-chart-pie-1: var(--chart-pie-1);
+  --color-chart-pie-2: var(--chart-pie-2);
+  --color-chart-pie-3: var(--chart-pie-3);
+  --color-chart-pie-4: var(--chart-pie-4);
+  --color-chart-pie-5: var(--chart-pie-5);
+  --color-chart-pie-6: var(--chart-pie-6);
+  --color-chart-pie-7: var(--chart-pie-7);
+  --color-chart-pie-8: var(--chart-pie-8);
+  --color-chart-pie-9: var(--chart-pie-9);
+  --color-chart-pie-10: var(--chart-pie-10);
+  --color-chart-pie-11: var(--chart-pie-11);
+  --color-chart-pie-12: var(--chart-pie-12);
+  --color-chart-pie-13: var(--chart-pie-13);
+  --color-chart-pie-14: var(--chart-pie-14);
+  --color-chart-pie-15: var(--chart-pie-15);
 
   /* Radius */
   --radius-sm: calc(var(--radius) - 4px);

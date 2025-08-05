@@ -105,7 +105,7 @@ export function DashboardCharts() {
     category: item.category,
     label: item.label,
     value: item.value / 100, // Converter centavos para reais
-    fill: `var(--blue-${Math.floor(Math.random() * 11) + 1})`, // Cor aleatória para cada categoria
+    fill: `var(--chart-pie-${Math.floor(Math.random() * 11) + 1})`, // Cor aleatória para cada categoria
   }))
 
   if (isLoading) {
