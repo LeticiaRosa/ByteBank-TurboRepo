@@ -37,47 +37,47 @@ const chartConfig = {
 const expensesConfig = {
   alimentacao: {
     label: 'Alimentação',
-    color: 'var(--chart-1)',
+    color: 'red',
   },
   transporte: {
     label: 'Transporte',
-    color: 'var(--chart-2)',
+    color: 'red',
   },
   casa: {
     label: 'Moradia',
-    color: 'var(--chart-3)',
+    color: 'red',
   },
   entretenimento: {
     label: 'Lazer',
-    color: 'var(--chart-4)',
+    color: 'red',
   },
   outros: {
     label: 'Outros',
-    color: 'var(--chart-5)',
+    color: 'red',
   },
   viagem: {
     label: 'Viagem',
-    color: 'var(--chart-6)',
+    color: 'red',
   },
   investimentos: {
     label: 'Investimentos',
-    color: 'var(--chart-7)',
+    color: 'red',
   },
   saude: {
     label: 'Saúde',
-    color: 'var(--chart-8)',
+    color: 'red',
   },
   educacao: {
     label: 'Educação',
-    color: 'var(--chart-9)',
+    color: 'red',
   },
   compras: {
     label: 'Compras',
-    color: 'var(--chart-10)',
+    color: 'red',
   },
   trabalho: {
     label: 'Trabalho',
-    color: 'var(--chart-11)',
+    color: 'red',
   },
 } satisfies ChartConfig
 
@@ -105,7 +105,7 @@ export function DashboardCharts() {
     category: item.category,
     label: item.label,
     value: item.value / 100, // Converter centavos para reais
-    fill: `var(--chart-${Math.floor(Math.random() * 11) + 1})`, // Cor aleatória para cada categoria
+    fill: `var(--blue-${Math.floor(Math.random() * 11) + 1})`, // Cor aleatória para cada categoria
   }))
 
   if (isLoading) {

@@ -89,6 +89,9 @@ export {
   type ChartConfig,
 } from "./components/chart.js";
 export { FileUpload } from "./components/file-upload.js";
+export { Combobox } from "./components/combobox.js";
+export type { ComboboxOption } from "./components/combobox.js";
+export { ScrollArea, ScrollBar } from "./components/scroll-area.js";
 
 // Hooks
 export { useToast } from "./hooks/use-toast.js";
@@ -97,6 +100,16 @@ export { useAuthToast } from "./hooks/use-auth-toast.js";
 
 // Utils
 export { cn } from "./lib/utils.js";
+
+// Constants
+export {
+  TRANSACTION_CATEGORIES,
+  TRANSACTION_CATEGORIES_WITHOUT_ALL,
+} from "./constants/transaction-categories.js";
+export type {
+  TransactionCategoryValue,
+  TransactionCategoryWithoutAll,
+} from "./constants/transaction-categories.js";
 
 // Icons
 export { Eye, EyeOff, Upload, File, X } from "lucide-react";

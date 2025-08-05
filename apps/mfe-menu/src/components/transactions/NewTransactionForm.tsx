@@ -9,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
   FileUpload,
+  Combobox,
+  TRANSACTION_CATEGORIES_WITHOUT_ALL,
 } from '@bytebank/ui'
 import {
   type CreateTransactionData,
@@ -372,29 +374,16 @@ export function NewTransactionForm({
           <label className="block text-sm font-medium text-card-foreground mb-1">
             Categoria *
           </label>
-          <Select
+          <Combobox
+            options={TRANSACTION_CATEGORIES_WITHOUT_ALL}
             value={formData.category}
             onValueChange={(value) =>
               handleInputChange('category', value as TransactionCategory)
             }
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Selecione a categoria" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="alimentacao">Alimentação</SelectItem>
-              <SelectItem value="transporte">Transporte</SelectItem>
-              <SelectItem value="saude">Saúde</SelectItem>
-              <SelectItem value="educacao">Educação</SelectItem>
-              <SelectItem value="entretenimento">Entretenimento</SelectItem>
-              <SelectItem value="compras">Compras</SelectItem>
-              <SelectItem value="casa">Casa</SelectItem>
-              <SelectItem value="trabalho">Trabalho</SelectItem>
-              <SelectItem value="investimentos">Investimentos</SelectItem>
-              <SelectItem value="viagem">Viagem</SelectItem>
-              <SelectItem value="outros">Outros</SelectItem>
-            </SelectContent>
-          </Select>
+            placeholder="Selecione a categoria"
+            searchPlaceholder="Buscar categoria..."
+            emptyMessage="Nenhuma categoria encontrada."
+          />
         </div>
 
         {/* Remetente/Pagador */}

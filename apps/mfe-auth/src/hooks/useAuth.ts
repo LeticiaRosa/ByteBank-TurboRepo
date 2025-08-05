@@ -79,7 +79,9 @@ class BankAccountService {
     // Função para gerar número de conta único
     const generateAccountNumber = () => {
       const timestamp = Date.now().toString()
-      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0')
+      const random = Math.floor(Math.random() * 1000)
+        .toString()
+        .padStart(3, '0')
       const userIdShort = userId.slice(-4) // Últimos 4 caracteres do user ID
       return `${timestamp.slice(-8)}${random}${userIdShort}`
     }

@@ -38,7 +38,12 @@ export function TransactionItem({
   const otherAccountId = isOutgoing
     ? transaction.to_account_id
     : transaction.from_account_id
-
+  const formatAmount = (amount: number) => {
+    return (amount / 100).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+  }
   const getTransactionIcon = (type: string, isOutgoing: boolean) => {
     switch (type) {
       case 'transfer':
@@ -195,22 +200,11 @@ export function TransactionItem({
 
   const handleDeleteTransaction = async () => {
     if (onDeleteTransaction) {
-      // Confirmar exclusão
-      const confirmDelete = confirm(
-        `Tem certeza que deseja excluir esta transação?\n\n` +
-          `Tipo: ${formatTransactionDescription(transaction.transaction_type, isOutgoing, otherAccountId)}\n` +
-          `Valor: ${transaction.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n` +
-          `Descrição: ${transaction.description}\n\n` +
-          `Esta ação não pode ser desfeita.`,
-      )
-
-      if (confirmDelete) {
-        await onDeleteTransaction(transaction.id)
-        // Atualizar saldo imediatamente após excluir transação
-        const refreshResult = onRefreshBankAccounts()
-        if (refreshResult instanceof Promise) {
-          await refreshResult
-        }
+      await onDeleteTransaction(transaction.id)
+      // Atualizar saldo imediatamente após excluir transação
+      const refreshResult = onRefreshBankAccounts()
+      if (refreshResult instanceof Promise) {
+        await refreshResult
       }
     }
   }
@@ -286,10 +280,7 @@ export function TransactionItem({
           transaction.transaction_type === 'fee'
             ? '-'
             : '+'}
-          {amount.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          })}
+          {formatAmount(amount)}
         </span>
 
         {/* Botões de ação */}

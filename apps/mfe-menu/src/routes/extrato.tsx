@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   useToast,
+  ScrollArea,
 } from '@bytebank/ui'
 import { useTransactions, type Transaction } from '../hooks'
 import { useFilteredTransactions } from '../hooks/useFilteredTransactions'
@@ -331,18 +332,20 @@ function ExtractPage() {
               </p>
             </div>
           ) : (
-            <div className="">
-              {filteredTransactions.map((transaction) => (
-                <div key={transaction.id} className="p-2">
-                  <TransactionItem
-                    transaction={transaction}
-                    onEdit={handleEditTransaction}
-                    onDelete={handleDeleteTransaction}
-                    onProcess={handleProcessTransaction}
-                  />
-                </div>
-              ))}
-            </div>
+            <ScrollArea className="h-[600px]">
+              <div className="space-y-2 pr-4">
+                {filteredTransactions.map((transaction) => (
+                  <div key={transaction.id} className="p-2">
+                    <TransactionItem
+                      transaction={transaction}
+                      onEdit={handleEditTransaction}
+                      onDelete={handleDeleteTransaction}
+                      onProcess={handleProcessTransaction}
+                    />
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
           )}
 
           {/* Paginação */}

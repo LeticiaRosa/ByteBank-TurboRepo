@@ -1,7 +1,7 @@
 import { type Transaction, type BankAccount } from '../../hooks'
 import { useFilteredTransactions } from '../../hooks/useFilteredTransactions'
 import { TransactionItem } from './TransactionItem'
-import { Button } from '@bytebank/ui'
+import { Button, ScrollArea } from '@bytebank/ui'
 import { useState, useEffect } from 'react'
 import { authService } from '../../lib/auth'
 
@@ -125,19 +125,21 @@ export function RecentTransactions({
       </div>
 
       {allTransactions && allTransactions.length > 0 ? (
-        <div className="space-y-3">
-          {allTransactions.map((transaction: Transaction) => (
-            <TransactionItem
-              key={transaction.id}
-              transaction={transaction}
-              primaryAccount={primaryAccount}
-              onProcessTransaction={onProcessTransaction}
-              onEditTransaction={onEditTransaction}
-              onDeleteTransaction={onDeleteTransaction}
-              onRefreshBankAccounts={onRefreshBankAccounts}
-            />
-          ))}
-        </div>
+        <ScrollArea className="h-142">
+          <div className="space-y-3 pr-4">
+            {allTransactions.map((transaction: Transaction) => (
+              <TransactionItem
+                key={transaction.id}
+                transaction={transaction}
+                primaryAccount={primaryAccount}
+                onProcessTransaction={onProcessTransaction}
+                onEditTransaction={onEditTransaction}
+                onDeleteTransaction={onDeleteTransaction}
+                onRefreshBankAccounts={onRefreshBankAccounts}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       ) : (
         <div className="text-center py-8">
           <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-3">

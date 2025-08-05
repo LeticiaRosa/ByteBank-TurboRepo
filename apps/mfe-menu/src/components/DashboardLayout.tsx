@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarInset,
   Toaster,
+  ScrollArea,
 } from '@bytebank/ui'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ThemeProvider } from '../hooks/useTheme'
@@ -149,7 +150,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </SidebarHeader>
 
             <SidebarContent className="flex bg-sidebar justify-between">
-              <div>
+              <ScrollArea className="flex-1">
                 <SidebarMenu className="p-2">
                   {menuItems.map((item) => {
                     const isActive = currentPathWithoutBase === item.path
@@ -169,7 +170,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     )
                   })}
                 </SidebarMenu>
-              </div>
+              </ScrollArea>
               <div>
                 <AccountInfos
                   title="Saldo Principal"
