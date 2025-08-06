@@ -1,6 +1,5 @@
 # ByteBank - Sistema de Gerenciamento Financeiro
-
-Uma aplicação moderna de gerenciamento financeiro construída com arquitetura de microfrontends, oferecendo uma experiência bancária digital completa com análises financeiras avançadas, transações seguras e interface intuitiva.
+Este projeto é o resultado do Tech Challenge da Fase 02 da pós-graduação em Front-End Engineer. Aprimorar e escalar a aplicação de gerenciamento financeiro existente, utilizando uma arquitetura de microfrontends e garantindo a integração e deploy eficientes em ambientes cloud. A aplicação deve incluir novas funcionalidades e melhorias de performance, segurança e experiência do usuário. 
 
 ## 🏆 Visão Geral
 
@@ -43,7 +42,7 @@ bytebank/
 - **Routing**: TanStack Router
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
 - **Containerização**: Docker + Docker Compose
-- **Deploy**: Netlify/Vercel (Cloud-native)
+- **Deploy**: Netlify
 
 ## 📊 Funcionalidades Principais
 
@@ -54,34 +53,33 @@ bytebank/
   - Evolução do saldo ao longo do tempo
   - Distribuição de gastos por categoria
   - Análise comparativa mensal
-- **Indicadores de Performance**: Crescimento percentual vs período anterior
-- **Visualizações Interativas**: Charts responsivos com tooltips
+- **Visualizações Interativas**:
+  - Charts responsivos com tooltips
+  - Dark/Light Mode
+  
 
 ### 💳 Gestão de Transações
 
 - **Criação Inteligente**:
   - Formulário com validação avançada
   - Sugestões automáticas de categorias
-  - Cálculo automático de saldos
-- **Listagem Avançada**:
-  - Filtros dinâmicos (data, categoria, valor, status)
-  - Busca textual por descrição e remetente
-  - Paginação otimizada com scroll infinito
+  - Cálculo automático de saldo
+  - Validação dos dados inseridos
 - **Upload de Comprovantes**:
   - Suporte a JPG, PNG, PDF (máx. 5MB)
   - Drag & drop interface
   - Armazenamento seguro no Supabase Storage
 
-### 📈 Análises e Relatórios
+### 📈 Extrato
 
 - **Extrato Detalhado**:
   - Filtros avançados (período, categoria, tipo, valor)
   - Estatísticas do período selecionado
-  - Export de dados (futuro)
-- **Métricas Financeiras**:
-  - Receitas vs Gastos mensais
-  - Categorização automática de despesas
-  - Alertas de gastos (futuro)
+  - Export de dados através de CSV
+- **Listagem Avançada**:
+  - Filtros dinâmicos (data, categoria, valor, status)
+  - Busca textual por descrição e remetente
+  - Paginação 
 
 ## 🛠️ Instalação e Desenvolvimento
 
@@ -90,7 +88,7 @@ bytebank/
 - Node.js 20+
 - pnpm (recomendado)
 - Docker (opcional, para containerização)
-- Conta no Supabase
+- Conta no Supabase 
 
 ### Configuração Rápida
 
@@ -119,10 +117,6 @@ pnpm install
 ```bash
 # Todos os microfrontends
 pnpm dev
-
-# Ou individualmente
-pnpm --filter=apps/mfe-auth dev
-pnpm --filter=apps/mfe-menu dev
 ```
 
 ### Desenvolvimento com Docker
@@ -144,96 +138,6 @@ docker compose down
 
 - Auth MFE: http://localhost:3001
 - Menu MFE: http://localhost:3002
-
-## 🔐 Configuração do Supabase
-
-### 1. Estrutura do Banco de Dados
-
-```sql
--- Tabela de perfis de usuário
-CREATE TABLE user_profiles (
-  id UUID REFERENCES auth.users PRIMARY KEY,
-  full_name TEXT,
-  cpf VARCHAR UNIQUE,
-  phone VARCHAR,
-  date_of_birth DATE,
-  address JSONB,
-  avatar_url TEXT,
-  account_status VARCHAR DEFAULT 'active',
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Tabela de contas bancárias
-CREATE TABLE bank_accounts (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
-  account_number VARCHAR UNIQUE NOT NULL,
-  account_type VARCHAR DEFAULT 'checking',
-  balance BIGINT DEFAULT 0 CHECK (balance >= 0),
-  currency VARCHAR DEFAULT 'BRL',
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Tabela de transações
-CREATE TABLE transactions (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
-  from_account_id UUID REFERENCES bank_accounts,
-  to_account_id UUID REFERENCES bank_accounts,
-  transaction_type transaction_type NOT NULL,
-  amount BIGINT NOT NULL CHECK (amount > 0),
-  currency VARCHAR DEFAULT 'BRL',
-  description TEXT,
-  category transaction_category DEFAULT 'outros',
-  status transaction_status DEFAULT 'pending',
-  sender_name TEXT,
-  receipt_url TEXT,
-  reference_number VARCHAR UNIQUE,
-  processed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  metadata JSONB
-);
-```
-
-### 2. Row Level Security (RLS)
-
-```sql
--- Políticas de segurança para contas bancárias
-CREATE POLICY "Users can view own accounts" ON bank_accounts
-  FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own accounts" ON bank_accounts
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own accounts" ON bank_accounts
-  FOR UPDATE USING (auth.uid() = user_id);
-
--- Políticas para transações
-CREATE POLICY "Users can view own transactions" ON transactions
-  FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own transactions" ON transactions
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-```
-
-### 3. Storage para Comprovantes
-
-```sql
--- Bucket para comprovantes
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('byte-bank', 'byte-bank', true);
-
--- Política de acesso
-CREATE POLICY "Users can upload receipts" ON storage.objects
-FOR INSERT WITH CHECK (
-  bucket_id = 'byte-bank'
-  AND auth.uid()::text = (storage.foldername(name))[2]
-);
-```
 
 ## 🎨 Design System
 
@@ -257,8 +161,6 @@ FOR INSERT WITH CHECK (
 ### Ferramentas de Qualidade
 
 ```bash
-# Testes unitários
-pnpm test
 
 # Linting
 pnpm lint
@@ -274,12 +176,6 @@ pnpm type-check
 pnpm build
 ```
 
-### Estrutura de Testes
-
-- **Unit Tests**: Vitest + Testing Library
-- **Component Tests**: Testes de integração de componentes
-- **E2E Tests**: Playwright (planejado)
-- **Performance**: Web Vitals monitoring
 
 ## 🚀 Deploy e Produção
 
@@ -348,33 +244,13 @@ federation({
 - **React Query**: Cache inteligente e sincronização
 - **Context API**: Estado de autenticação
 - **Local Storage**: Persistência de preferências
-- **URL State**: Filtros e navegação
 
 ### Performance
 
 - **Code Splitting**: Lazy loading automático
 - **Bundle Optimization**: Tree shaking + minificação
 - **Image Optimization**: Lazy loading + WebP
-- **Caching**: Service Worker (futuro)
 
-## 🚦 Roadmap e Melhorias
-
-### Próximas Funcionalidades
-
-- [ ] **Dashboard Personalizável**: Widgets arrastaveis
-- [ ] **Metas Financeiras**: Sistema de objetivos
-- [ ] **Alertas Inteligentes**: Notificações de gastos
-- [ ] **Relatórios Avançados**: PDF export
-- [ ] **API Integrations**: Open Banking
-- [ ] **Mobile App**: React Native
-
-### Melhorias Técnicas
-
-- [ ] **PWA**: Service Workers + offline support
-- [ ] **Micro-animações**: Framer Motion
-- [ ] **Testes E2E**: Playwright setup
-- [ ] **Monitoring**: Sentry + DataDog
-- [ ] **CI/CD**: GitHub Actions completo
 
 ## 🤝 Contribuição
 
@@ -391,7 +267,6 @@ federation({
 - **TypeScript**: Tipagem estrita obrigatória
 - **ESLint + Prettier**: Formatação automática
 - **Conventional Commits**: Padrão de mensagens
-- **Componentes**: Documentação com Storybook (futuro)
 
 ## 📄 Licença
 
