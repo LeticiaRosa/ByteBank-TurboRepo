@@ -75,7 +75,7 @@ export function AccountInfos({
                 variant="ghost"
                 size="sm"
                 onClick={toggleBalanceVisibility}
-                className="h-8 w-8 p-0 hover:bg-muted/50"
+                className="h-8 w-8 p-0 hover:bg-muted/50   cursor-pointer"
                 title={isBalanceVisible ? 'Ocultar saldo' : 'Mostrar saldo'}
               >
                 {isBalanceVisible ? (

@@ -292,7 +292,7 @@ export function TransactionItem({
               <Button
                 variant="ghost"
                 size="sm"
-                className="mt-1"
+                className="mt-1 cursor-pointer"
                 aria-label="Menu de ações"
               >
                 <svg
@@ -305,11 +305,14 @@ export function TransactionItem({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleEditTransaction}>
+              <DropdownMenuItem
+                onClick={handleEditTransaction}
+                className="cursor-pointer"
+              >
                 <svg
-                  className="w-3 h-3"
+                  className="w-3 h-3 "
                   fill="none"
-                  stroke="currentColor"
+                  stroke="currentColor "
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -323,10 +326,10 @@ export function TransactionItem({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleDeleteTransaction}
-                className="text-destructive"
+                className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
               >
                 <svg
-                  className="w-3 h-3 "
+                  className="w-3 h-3 text-destructive focus:text-destructive"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

@@ -78,10 +78,10 @@ export const UserMenuItems = () => {
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={handleSignOut}
-        className="cursor-pointer text-destructive focus:text-destructive"
+        className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
       >
         <svg
-          className="mr-2 h-4 w-4"
+          className="w-3 h-3 text-destructive"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
